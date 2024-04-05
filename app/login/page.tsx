@@ -1,47 +1,41 @@
-'use client'
+// mark as client component
+"use client";
 
-import { title } from "@/components/primitives";
-import { Button, Input } from "@nextui-org/react";
-import React, { useState, useEffect } from 'react';
+// importing necessary functions
+import { useSession, signIn, signOut } from "next-auth/react"
+import Image from "next/image";
 
-export default function LoginPage() {
-	const [clientId, setClientId] = useState('');
-	const [secret, setSecret] = useState('');
+export default function Home() {
+  // extracting data from usesession as session
+  const { data: session } = useSession()
 
-	// 使用 useEffect 钩子在组件加载后从 localStorage 获取数据
-	useEffect(() => {
-		const storedClientId = localStorage.getItem('clientId');
-		const storedSecret = localStorage.getItem('secret');
-		if (storedClientId) setClientId(storedClientId);
-		if (storedSecret) setSecret(storedSecret);
-	}, []);
-  
-	const handleLogin = () => {
-	  const redirect_uri = 'http://localhost:3000/login';
-	  const scope = 'read:user user:email';
-
-	  localStorage.setItem('clientId', clientId);
-      localStorage.setItem('secret', secret);
-
-	  window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirect_uri}&scope=${scope}`;
-	};
-  
-	return (
-	  <div>
-		<div className="flex flex-col items-center gap-4">
-		  <h1 className={title()}>Login</h1>
-		  <Input 
-			label="Client ID" 
-			value={clientId}
-			onChange={(e) => setClientId(e.target.value)}
-			className="w-[150%]" />
-		  <Input 
-			label="Secret" 
-			value={secret}
-			onChange={(e) => setSecret(e.target.value)}
-		  	className="w-[150%]" />
-		  <Button onClick={handleLogin}>Login</Button>
-		</div>
-	  </div>
-	);
+  // checking if sessions exists
+  if (session) {
+    // rendering components for logged in users
+    return (
+      <div className="w-full h-screen flex flex-col justify-center items-center">
+        <div className="w-44 h-44 relative mb-4">
+        <Image
+          src={session.user?.image as string}
+          fill
+          alt=""
+          className="object-cover rounded-full"
+        />
+        </div>
+        <p className="text-2xl mb-2">Welcome <span className="font-bold">{session.user?.name}</span>. Signed In As</p>
+        <p className="font-bold mb-4">{session.user?.email}</p>
+        <button className="bg-red-600 py-2 px-6 rounded-md" onClick={() => signOut()}>Sign out</button>
+      </div>
+    )
   }
+
+  // rendering components for not logged in users
+  return (
+    <div className="w-full h-screen flex flex-col justify-center items-center">
+        <p className="text-2xl mb-2">Not Signed In</p>
+        <button className="bg-blue-600 py-2 px-6 rounded-md mb-2" onClick={() => signIn('google')}>Sign in with google</button>
+        <button className="bg-none border-gray-300 border py-2 px-6 rounded-md mb-2" onClick={() => signIn('github')}>Sign in with github</button>
+    </div>
+  )
+
+}
