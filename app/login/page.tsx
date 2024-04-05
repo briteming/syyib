@@ -2,15 +2,27 @@
 
 import { title } from "@/components/primitives";
 import { Button, Input } from "@nextui-org/react";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function LoginPage() {
 	const [clientId, setClientId] = useState('');
 	const [secret, setSecret] = useState('');
+
+	// 使用 useEffect 钩子在组件加载后从 localStorage 获取数据
+	useEffect(() => {
+		const storedClientId = localStorage.getItem('clientId');
+		const storedSecret = localStorage.getItem('secret');
+		if (storedClientId) setClientId(storedClientId);
+		if (storedSecret) setSecret(storedSecret);
+	}, []);
   
 	const handleLogin = () => {
 	  const redirect_uri = 'http://localhost:3000/login';
 	  const scope = 'read:user user:email';
+
+	  localStorage.setItem('clientId', clientId);
+      localStorage.setItem('secret', secret);
+
 	  window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirect_uri}&scope=${scope}`;
 	};
   
