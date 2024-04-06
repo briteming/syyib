@@ -7,7 +7,7 @@ export default function Home() {
   const { data: session } = useSession();
   
   const getGithubIssue = () => {
-    const accessToken = session?.access_token;
+    const accessToken = (session as any)?.access_token;
     
     if (!accessToken) {
       console.error('No access token available.');
