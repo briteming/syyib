@@ -12,6 +12,7 @@ export interface GithubIssue {
 	body: string | null;
 	comments_url: string;
 	updated_at: string;
+	state: string;
 }
 const username = 'Shih-Yang-Young';
 const repoName = 'issue-blog';
@@ -24,6 +25,7 @@ async function fetchGithubData(cursor?: string | null): Promise<{ items: GithubI
 		body: issue.body || null,
 		comments_url: issue.comments_url,
 		updated_at: issue.updated_at,
+		state: issue.state,
 	}));
 	return {
 		items: githubIssues,
@@ -76,6 +78,7 @@ export default function Browse() {
 				<TableColumn key="title">Title</TableColumn>
 				<TableColumn key="body">Body</TableColumn>
 				<TableColumn key="updated_at">Updated At</TableColumn>
+				<TableColumn key="state">state</TableColumn>
 				<TableColumn key="comments">Comments</TableColumn>
 			</TableHeader>
 			<TableBody

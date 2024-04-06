@@ -8,43 +8,23 @@ export const siteConfig = {
 			label: "Browse",
 			href: "/",
 		},
-    {
-      label: "Management",
-      href: "/management",
-    },
-    {
-      label: "About",
-      href: "/about",
-    }
+		{
+		label: "Management",
+		href: "/management",
+		},
+		{
+		label: "About",
+		href: "/about",
+		}
 	],
 	navMenuItems: [
 		{
-			label: "Profile",
-			href: "/profile",
+			label: "Browse",
+			href: "/",
 		},
 		{
-			label: "Dashboard",
-			href: "/dashboard",
-		},
-		{
-			label: "Projects",
-			href: "/projects",
-		},
-		{
-			label: "Team",
-			href: "/team",
-		},
-		{
-			label: "Calendar",
-			href: "/calendar",
-		},
-		{
-			label: "Settings",
-			href: "/settings",
-		},
-		{
-			label: "Help & Feedback",
-			href: "/help-feedback",
+			label: "Management",
+			href: "/management",
 		},
 		{
 			label: "Logout",
