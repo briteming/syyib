@@ -11,10 +11,18 @@ import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Paginat
 import {useInfiniteScroll} from "@nextui-org/use-infinite-scroll";
 import {useAsyncList} from "@react-stately/data";
 
+export interface GithubIssue {
+	id: number;
+	title: string;
+	body: string | null;
+	comments_url: string;
+  }
 
 export default function Home() {
 	const [isLoading, setIsLoading] = React.useState(true);
 	const [hasMore, setHasMore] = React.useState(false);
+	const [loadedCount, setLoadedCount] = React.useState(0); // 记录已加载的数量
+	const [selectionBehavior, setSelectionBehavior] = React.useState("toggle");
 
 	let list = useAsyncList({
 	async load({signal, cursor}) {
@@ -42,7 +50,7 @@ export default function Home() {
 	/* ---------------------------------- */
 	const { data: session } = useSession();
 	const username = 'Shih-Yang-Young';
-  
+	const repoName = 'issue-blog';
     const getGithubIssue = () => {
     const accessToken = (session as any)?.access_token;
     
@@ -54,40 +62,20 @@ export default function Home() {
     fetchGithubData(accessToken); 
   };
   const fetchGithubData = async (accessToken: any) => {
-
-	fetch(`https://api.github.com/users/${username}/repos`)
-	.then(response => response.json())
-	.then(repos => {
-		repos.forEach(repo => {
-		const repoName = repo.name;
-		fetch(`https://api.github.com/repos/${username}/${repoName}/issues`)
+		  fetch(`https://api.github.com/repos/${username}/${repoName}/issues`)
 			.then(response => response.json())
-			.then(issues => {
-			console.log(`Issues for ${repoName}:`, issues);
+			.then((issues: any[]) => {
+			  const githubIssues: GithubIssue[] = issues.map(issue => ({
+				id: issue.id,
+				title: issue.title,
+				body: issue.body || null,
+				comments_url: issue.comments_url,
+			  }));
+			  console.log(`Issues for ${repoName}:`, githubIssues);
 			})
 			.catch(error => {
-			console.error(`Error fetching issues for ${repoName}:`, error);
+			  console.error(`Error fetching issues for ${repoName}:`, error);
 			});
-		});
-	})
-	.catch(error => {
-		console.error('Error fetching repositories:', error);
-	});
-    // try {
-    //   const octokit = new Octokit({ auth: `${accessToken}` });
-    //   const response = await octokit.request('GET /repos/Shih-Yang-Chen/try-next/issues', {
-    //     headers: {
-    //       'X-GitHub-Api-Version': '2022-11-28'
-    //     }
-    //   })
-    //   if (!response) {
-    //     throw new Error('Failed to fetch GitHub issues');
-    //   }
-
-    //   console.log(response); 
-    // } catch (error) {
-    //   console.error('Error fetching GitHub issues:', error);
-    // }
   };
 	return (
 		<div>
@@ -119,12 +107,15 @@ export default function Home() {
 				base: "max-h-[300px] overflow-scroll",
 				table: "min-h-[300px]",
 			}}
+			selectionBehavior={selectionBehavior}
+			onRowAction={(key) => alert(`Opening item ${key}...`)}
 			>
 			<TableHeader>
 				<TableColumn key="name">Name</TableColumn>
 				<TableColumn key="height">Height</TableColumn>
 				<TableColumn key="mass">Mass</TableColumn>
 				<TableColumn key="birth_year">Birth year</TableColumn>
+				<TableColumn key="button"><Button>aaa</Button></TableColumn>
 			</TableHeader>
 			<TableBody
 				isLoading={isLoading}
