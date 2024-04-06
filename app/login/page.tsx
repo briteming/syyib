@@ -2,6 +2,7 @@
 "use client";
 
 import { useSession, signIn, signOut } from "next-auth/react";
+import { Octokit } from "@octokit/core";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -18,20 +19,17 @@ export default function Home() {
   };
   const fetchGithubData = async (accessToken: any) => {
     try {
-      const response = await fetch('https://api.github.com/repos/Shih-Yang-Chen/try-next/issues', {
-        method: 'GET', 
+      const octokit = new Octokit({ auth: `${accessToken}` });
+      const response = await octokit.request('GET /repos/Shih-Yang-Chen/try-next/issues', {
         headers: {
-          'Authorization': `token ${accessToken}`,
-          'Accept': 'application/vnd.github.v3+json' // use GitHub REST API v3
+          'X-GitHub-Api-Version': '2022-11-28'
         }
-      });
-
-      if (!response.ok) {
+      })
+      if (!response) {
         throw new Error('Failed to fetch GitHub issues');
       }
 
-      const data = await response.json();
-      console.log(data); 
+      console.log(response); 
     } catch (error) {
       console.error('Error fetching GitHub issues:', error);
     }
