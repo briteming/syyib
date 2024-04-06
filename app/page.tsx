@@ -2,8 +2,6 @@
 
 import { title } from "@/components/primitives";
 
-import { useSession } from "next-auth/react";
-import { Octokit } from "@octokit/core";
 import { Button } from "@nextui-org/react";
 
 import React from "react";
@@ -47,36 +45,25 @@ export default function Home() {
 
 	const [loaderRef, scrollerRef] = useInfiniteScroll({hasMore, onLoadMore: list.loadMore});
 	
-	/* ---------------------------------- */
-	const { data: session } = useSession();
 	const username = 'Shih-Yang-Young';
 	const repoName = 'issue-blog';
-    const getGithubIssue = () => {
-    const accessToken = (session as any)?.access_token;
-    
-    // if (!accessToken) {
-    //   console.error('No access token available.');
-    //   return;
-    // }
 
-    fetchGithubData(accessToken); 
-  };
-  const fetchGithubData = async (accessToken: any) => {
-		  fetch(`https://api.github.com/repos/${username}/${repoName}/issues`)
-			.then(response => response.json())
-			.then((issues: any[]) => {
-			  const githubIssues: GithubIssue[] = issues.map(issue => ({
-				id: issue.id,
-				title: issue.title,
-				body: issue.body || null,
-				comments_url: issue.comments_url,
-			  }));
-			  console.log(`Issues for ${repoName}:`, githubIssues);
-			})
-			.catch(error => {
-			  console.error(`Error fetching issues for ${repoName}:`, error);
-			});
-  };
+	const fetchGithubData = async () => {
+			fetch(`https://api.github.com/repos/${username}/${repoName}/issues`)
+				.then(response => response.json())
+				.then((issues: any[]) => {
+				const githubIssues: GithubIssue[] = issues.map(issue => ({
+					id: issue.id,
+					title: issue.title,
+					body: issue.body || null,
+					comments_url: issue.comments_url,
+				}));
+				console.log(`Issues for ${repoName}:`, githubIssues);
+				})
+				.catch(error => {
+				console.error(`Error fetching issues for ${repoName}:`, error);
+				});
+	};
 	return (
 		<div>
 			<section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
@@ -86,7 +73,7 @@ export default function Home() {
 					<Button
 						id="getUserData"
 						className="bg-none border-gray-300 border py-2 px-6 rounded-md mb-2"
-						onClick={getGithubIssue}
+						onClick={fetchGithubData}
 					>
 						Get GitHub Data
 					</Button>
@@ -107,7 +94,6 @@ export default function Home() {
 				base: "max-h-[300px] overflow-scroll",
 				table: "min-h-[300px]",
 			}}
-			selectionBehavior={selectionBehavior}
 			onRowAction={(key) => alert(`Opening item ${key}...`)}
 			>
 			<TableHeader>
