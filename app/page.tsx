@@ -30,7 +30,7 @@ async function fetchGithubData(cursor?: string | null): Promise<{ items: GithubI
 		cursor: json.next,
 	};
 }
-export default function Home() {
+export default function Browse() {
 	const [isLoading, setIsLoading] = React.useState(true);
 	const [hasMore, setHasMore] = React.useState(false);
 	const [loadedCount, setLoadedCount] = React.useState(0);

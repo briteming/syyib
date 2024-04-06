@@ -5,7 +5,7 @@ import { useSession, signIn, signOut } from "next-auth/react";
 import { Octokit } from "@octokit/core";
 import { Button } from "@nextui-org/react";
 
-export default function Home() {
+export default function Browse() {
   const { data: session } = useSession();
   
   const getGithubIssue = () => {
