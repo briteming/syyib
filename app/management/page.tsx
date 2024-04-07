@@ -38,11 +38,11 @@ import {
 import { toast } from "react-hot-toast";
 import AddIssueModal from "@/components/addIssueModal";
 
-const stateColorMap = {
+const stateColorMap: Record<string, string> = {
   open: "success",
   closed: "danger",
   "in progress": "warning",
-};
+}
 const username = "Shih-Yang-Young";
 const repoName = "issue-blog";
 const perPage = 10;
@@ -127,14 +127,14 @@ export default function Management() {
       });
     }
   };
-  const renderCell = React.useCallback((issue, columnKey) => {
+  const renderCell = React.useCallback((issue: any, columnKey: any) => {
     const cellValue = issue[columnKey];
     switch (columnKey) {
       case "state":
         return (
           <Chip
             className="capitalize"
-            color={stateColorMap[issue.state]}
+            color="default"
             size="sm"
             variant="flat"
           >
