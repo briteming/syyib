@@ -16,30 +16,13 @@ const stateColorMap = {
 
 export default function Management() {
   const { data: session } = useSession();
-  const renderCell = React.useCallback((user, columnKey) => {
-    const cellValue = user[columnKey];
+  const renderCell = React.useCallback((issue, columnKey) => {
+    const cellValue = issue[columnKey];
 
     switch (columnKey) {
-      case "name":
-        return (
-          <User
-            avatarProps={{radius: "lg", src: user.avatar}}
-            description={user.email}
-            name={cellValue}
-          >
-            {user.email}
-          </User>
-        );
-      case "role":
-        return (
-          <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize">{cellValue}</p>
-            <p className="text-bold text-sm capitalize text-default-400">{user.team}</p>
-          </div>
-        );
       case "state":
         return (
-          <Chip className="capitalize" color={stateColorMap[user.state]} size="sm" variant="flat">
+          <Chip className="capitalize" color={stateColorMap[issue.state]} size="sm" variant="flat">
             {cellValue}
           </Chip>
         );
@@ -86,9 +69,9 @@ export default function Management() {
 		)}
 		</TableHeader>
 		<TableBody items={issues}>
-		{(item) => (
-			<TableRow key={item.id}>
-			{(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+		{(issue) => (
+			<TableRow key={issue.id}>
+			{(columnKey) => <TableCell>{renderCell(issue, columnKey)}</TableCell>}
 			</TableRow>
 		)}
 		</TableBody>
