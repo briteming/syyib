@@ -68,8 +68,8 @@ export default function Browse() {
           </div>
         ) : null}
         classNames={{
-          base: "max-h-[300px] overflow-scroll",
-          table: "min-h-[300px]",
+          base: "max-h-[500px]",
+          table: "min-h-[500px]",
         }}
         onRowAction={(key) => alert(`Opening item ${key}...`)}
       >
