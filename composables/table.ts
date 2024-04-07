@@ -12,6 +12,6 @@ const browseColumns = [
   { name: "Body", uid: "body" },
   { name: "Updated At", uid: "updated_at" },
   { name: "State", uid: "state" },
-  { name: "Comments", uid: "Comments" },
+  { name: "Comments", uid: "comments" },
 ];
 export { managementColumns, browseColumns };

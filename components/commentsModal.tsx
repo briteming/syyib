@@ -21,11 +21,10 @@ interface Comment {
   id: number;
   body: string;
 }
-
-const CommentsModal: React.FC<IssueModalProps> = ({
-  issueNumber,
-  onResponse,
-}) => {
+interface ModalProps {
+  issueNumber: number;
+}
+const CommentsModal: React.FC<ModalProps> = ({ issueNumber }) => {
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const [comments, setComments] = useState<Comment[]>([]);
   useEffect(() => {
@@ -41,7 +40,7 @@ const CommentsModal: React.FC<IssueModalProps> = ({
           },
         );
         const commentsData = response.data.map((comment: Comment) => ({
-            id: comment.id,
+          id: comment.id,
           body: comment.body,
         }));
         setComments(commentsData);

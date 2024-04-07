@@ -108,10 +108,7 @@ export default function Management() {
       case "actions":
         return (
           <div className="relative flex items-center gap-2">
-            <CommentsModal
-              issueNumber={issue.number}
-              onResponse={handleModalSuccess}
-            />
+            <CommentsModal issueNumber={issue.number} />
             <EditIssueModal
               issueNumber={issue.number}
               onResponse={handleModalSuccess}

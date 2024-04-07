@@ -9,13 +9,14 @@ import {
   TableRow,
   TableCell,
   Spinner,
-  getKeyValue,
+  Chip,
 } from "@nextui-org/react";
 import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
 import { useAsyncList } from "@react-stately/data";
 import { Octokit } from "octokit";
 import { GithubIssue } from "@/interfaces/GithubIssue";
 import { browseColumns } from "@/composables/table";
+import CommentsModal from "@/components/commentsModal";
 
 const octokit = new Octokit({});
 const username = "Shih-Yang-Young";
@@ -66,6 +67,25 @@ export default function Browse() {
     hasMore,
     onLoadMore: list.loadMore,
   });
+  const renderCell = React.useCallback((issue: any, columnKey: any) => {
+    const cellValue = issue[columnKey];
+    switch (columnKey) {
+      case "state":
+        return (
+          <Chip className="capitalize" color="default" size="sm" variant="flat">
+            {cellValue}
+          </Chip>
+        );
+      case "comments":
+        return (
+          <div className="relative flex items-center gap-2">
+            <CommentsModal issueNumber={issue.number} />
+          </div>
+        );
+      default:
+        return cellValue;
+    }
+  }, []);
   return (
     <div>
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
@@ -90,7 +110,6 @@ export default function Browse() {
           base: "max-h-[500px]",
           table: "min-h-[500px]",
         }}
-        onRowAction={(key) => alert(`Opening item ${key}...`)}
       >
         <TableHeader columns={browseColumns}>
           {(column) => (
@@ -110,7 +129,7 @@ export default function Browse() {
           {(item) => (
             <TableRow key={item.number}>
               {(columnKey) => (
-                <TableCell>{getKeyValue(item, columnKey)}</TableCell>
+                <TableCell>{renderCell(item, columnKey)}</TableCell>
               )}
             </TableRow>
           )}
