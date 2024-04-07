@@ -36,7 +36,6 @@ export default function Browse() {
         per_page: perPage,
         page: Number(cursor),
       });
-      console.log("i am ", response.data.length);
       const githubIssues: GithubIssue[] = response.data.map((issue: any) => ({
         id: issue.id,
         title: issue.title,
