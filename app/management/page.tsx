@@ -36,6 +36,7 @@ import {
   Link,
 } from "@nextui-org/react";
 import { toast } from "react-hot-toast";
+import AddIssueModal from "@/components/addIssueModal";
 
 const stateColorMap = {
   open: "success",
@@ -126,48 +127,12 @@ export default function Management() {
     }
   }, []);
 
-  const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
-  const [issueTitle, setIssueTitle] = useState("");
-  const [issueBody, setIssueBody] = useState("");
-  const [fineGrainedAccessToken, setFineGrainedAccessToken] = useState("");
-  const addIssue = async () => {
-    try {
-      const addIssueOctokit = new Octokit({ auth: fineGrainedAccessToken });
-      const response = await addIssueOctokit.request(
-        `POST /repos/${username}/${repoName}/issues`,
-        {
-          owner: username,
-          repo: repoName,
-          title: issueTitle,
-          body: issueBody,
-          headers: {
-            "X-GitHub-Api-Version": "2022-11-28",
-          },
-        },
-      );
-      console.log("response", response);
-      toast.success("add issue success!", {
-        style: { background: "green", color: "white" },
-        position: "top-center",
-      });
-      onClose();
-    } catch (error) {
-      console.error("Error creating issue:", error);
-      toast.error("add issue error", {
-        style: { background: "red", color: "white" },
-        position: "top-center",
-      });
-    }
-  };
-  const handleButtonClick = () => {};
   if (session) {
     return (
       <div>
         <div className="flex items-center justify-between my-4">
         <h1 className={title()}>Management</h1>
-        <Button onPress={onOpen} color="primary">
-          Add Issue
-        </Button>
+        <AddIssueModal/>
         </div>
         <Table
           isHeaderSticky
@@ -209,57 +174,7 @@ export default function Management() {
             )}
           </TableBody>
         </Table>
-        <Modal
-          isOpen={isOpen}
-          onOpenChange={onOpenChange}
-          placement="top-center"
-        >
-          <ModalContent>
-            {(onClose) => (
-              <>
-                <ModalHeader className="flex flex-col gap-1">
-                  Add New Issue
-                </ModalHeader>
-                <ModalBody>
-                  <Input
-                    autoFocus
-                    label="fine grained access token"
-                    placeholder="Enter your fine grained access token"
-                    variant="bordered"
-                    required
-                    value={fineGrainedAccessToken}
-                    onChange={(e) => setFineGrainedAccessToken(e.target.value)}
-                  />
-                  <Input
-                    autoFocus
-                    label="title"
-                    placeholder="Enter your title"
-                    variant="bordered"
-                    required
-                    value={issueTitle}
-                    onChange={(e) => setIssueTitle(e.target.value)}
-                  />
-                  <Textarea
-                    label="body"
-                    placeholder="Enter your body"
-                    variant="bordered"
-                    size="lg"
-                    value={issueBody}
-                    onChange={(e) => setIssueBody(e.target.value)}
-                  />
-                </ModalBody>
-                <ModalFooter>
-                  <Button color="danger" variant="flat" onPress={onClose}>
-                    Close
-                  </Button>
-                  <Button color="primary" onPress={addIssue}>
-                    Add New Issue
-                  </Button>
-                </ModalFooter>
-              </>
-            )}
-          </ModalContent>
-        </Modal>
+        
       </div>
     );
   }
