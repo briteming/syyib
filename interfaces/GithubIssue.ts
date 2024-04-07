@@ -1,5 +1,5 @@
 export interface GithubIssue {
-  id: number;
+  number: number;
   title: string;
   body: string | null;
   comments_url: string;

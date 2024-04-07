@@ -68,7 +68,7 @@ export default function Management() {
         page: Number(cursor),
       });
       const githubIssues: GithubIssue[] = response.data.map((issue: any) => ({
-        id: issue.id,
+        number: issue.number,
         title: issue.title,
         body: issue.body || null,
         comments_url: issue.comments_url,
@@ -91,20 +91,20 @@ export default function Management() {
     onLoadMore: list.loadMore,
   });
   const { isOpen, onOpen, onOpenChange,onClose } = useDisclosure();
-  const [deleteIssueId, setDeleteIssueId] = useState(0);
+  const [deleteIssueNumber, setDeleteIssueNumber] = useState(0);
   const deleteDialog = (id: number) =>{
     onOpen();
-    setDeleteIssueId(id);
+    setDeleteIssueNumber(id);
   }
   const deleteIssue = async () => {
     try {
       const deleteIssueOctokit = new Octokit({ auth: `` });
       const response = await deleteIssueOctokit.request(
-        `PUT /repos/Shih-Yang-Young/issue-blog/issues/${21}/lock`,
+        `PUT /repos/Shih-Yang-Young/issue-blog/issues/${deleteIssueNumber}/lock`,
         {
           owner: "Shih-Yang-Young",
           repo: "issue-blog",
-          issue_number: 21,
+          issue_number: deleteIssueNumber,
           lock_reason : 'off-topic',
           headers: {
             "X-GitHub-Api-Version": "2022-11-28",
@@ -115,6 +115,7 @@ export default function Management() {
         style: { background: "green", color: "white" },
         position: "top-center",
       });
+      list.reload();
       onClose();
     } catch (error) {
       console.error("Error creating issue:", error);
@@ -154,7 +155,7 @@ export default function Management() {
             <Tooltip color="danger" content="Delete user">
               <span
                 className="text-lg text-danger cursor-pointer active:opacity-50"
-                onClick={() => deleteDialog(issue.id)}
+                onClick={() => deleteDialog(issue.number)}
               >
                 <DeleteIcon />
               </span>
@@ -205,7 +206,7 @@ export default function Management() {
             loadingContent={<Spinner color="white" />}
           >
             {(issue) => (
-              <TableRow key={issue.id}>
+              <TableRow key={issue.number}>
                 {(columnKey) => (
                   <TableCell>{renderCell(issue, columnKey)}</TableCell>
                 )}
@@ -218,7 +219,7 @@ export default function Management() {
             {(onClose) => (
               <>
                 <ModalHeader className="flex flex-col">
-                  Are u sure delete {deleteIssueId}?
+                  Are u sure delete {deleteIssueNumber}?
                 </ModalHeader>
                 <ModalFooter>
                   <Button color="danger" variant="light" onPress={onClose}>

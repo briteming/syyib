@@ -39,7 +39,7 @@ export default function Browse() {
         page: Number(cursor),
       });
       const githubIssues: GithubIssue[] = response.data.map((issue: any) => ({
-        id: issue.id,
+        number: issue.number,
         title: issue.title,
         body: issue.body || null,
         comments_url: issue.comments_url,
@@ -104,7 +104,7 @@ export default function Browse() {
           loadingContent={<Spinner color="white" />}
         >
           {(item) => (
-            <TableRow key={item.id}>
+            <TableRow key={item.number}>
               {(columnKey) => (
                 <TableCell>{getKeyValue(item, columnKey)}</TableCell>
               )}

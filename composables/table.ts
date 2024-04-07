@@ -1,5 +1,5 @@
 const managementColumns = [
-  { name: "Id", uid: "id" },
+  { name: "Number", uid: "number" },
   { name: "Title", uid: "title" },
   { name: "Body", uid: "body" },
   { name: "Updated At", uid: "updated_at" },
@@ -7,7 +7,7 @@ const managementColumns = [
   { name: "ACTIONS", uid: "actions" },
 ];
 const browseColumns = [
-  { name: "Id", uid: "id" },
+  { name: "Number", uid: "number" },
   { name: "Title", uid: "title" },
   { name: "Body", uid: "body" },
   { name: "Updated At", uid: "updated_at" },
