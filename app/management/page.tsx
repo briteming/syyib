@@ -6,7 +6,7 @@ import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner
 import {EditIcon} from "./EditIcon";
 import {DeleteIcon} from "./DeleteIcon";
 import {EyeIcon} from "./EyeIcon";
-import { columns } from "@/composables/table";
+import { managementColumns } from "@/composables/table";
 import { useAsyncList } from "@react-stately/data";
 import { GithubIssue } from "@/interfaces/GithubIssue";
 import { Octokit } from "octokit";
@@ -111,7 +111,7 @@ export default function Management() {
 		</div>
 		) : null}
 	>
-		<TableHeader columns={columns}>
+		<TableHeader columns={managementColumns}>
 		{(column) => (
 			<TableColumn key={column.uid} align={column.uid === "actions" ? "center" : "start"}>
 			{column.name}
