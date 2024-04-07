@@ -1,5 +1,15 @@
 import React, { useState } from "react";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Input, Textarea, useDisclosure } from "@nextui-org/react";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  Input,
+  Textarea,
+  useDisclosure,
+} from "@nextui-org/react";
 import { Octokit } from "octokit";
 import { toast } from "react-hot-toast";
 
@@ -40,60 +50,56 @@ const AddIssueModal = () => {
 
   return (
     <div>
-        <Button onPress={onOpen} color="primary">
-          Add Issue
-        </Button>
-        <Modal
-          isOpen={isOpen}
-          onOpenChange={onOpenChange}
-          placement="top-center"
-        >
-          <ModalContent>
-            {(onClose) => (
-              <>
-                <ModalHeader className="flex flex-col gap-1">
+      <Button onPress={onOpen} color="primary">
+        Add Issue
+      </Button>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                Add New Issue
+              </ModalHeader>
+              <ModalBody>
+                <Input
+                  autoFocus
+                  label="fine grained access token"
+                  placeholder="Enter your fine grained access token"
+                  variant="bordered"
+                  required
+                  value={fineGrainedAccessToken}
+                  onChange={(e) => setFineGrainedAccessToken(e.target.value)}
+                />
+                <Input
+                  autoFocus
+                  label="title"
+                  placeholder="Enter your title"
+                  variant="bordered"
+                  required
+                  value={issueTitle}
+                  onChange={(e) => setIssueTitle(e.target.value)}
+                />
+                <Textarea
+                  label="body"
+                  placeholder="Enter your body"
+                  variant="bordered"
+                  size="lg"
+                  value={issueBody}
+                  onChange={(e) => setIssueBody(e.target.value)}
+                />
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="flat" onPress={onClose}>
+                  Close
+                </Button>
+                <Button color="primary" onPress={addIssue}>
                   Add New Issue
-                </ModalHeader>
-                <ModalBody>
-                  <Input
-                    autoFocus
-                    label="fine grained access token"
-                    placeholder="Enter your fine grained access token"
-                    variant="bordered"
-                    required
-                    value={fineGrainedAccessToken}
-                    onChange={(e) => setFineGrainedAccessToken(e.target.value)}
-                  />
-                  <Input
-                    autoFocus
-                    label="title"
-                    placeholder="Enter your title"
-                    variant="bordered"
-                    required
-                    value={issueTitle}
-                    onChange={(e) => setIssueTitle(e.target.value)}
-                  />
-                  <Textarea
-                    label="body"
-                    placeholder="Enter your body"
-                    variant="bordered"
-                    size="lg"
-                    value={issueBody}
-                    onChange={(e) => setIssueBody(e.target.value)}
-                  />
-                </ModalBody>
-                <ModalFooter>
-                  <Button color="danger" variant="flat" onPress={onClose}>
-                    Close
-                  </Button>
-                  <Button color="primary" onPress={addIssue}>
-                    Add New Issue
-                  </Button>
-                </ModalFooter>
-              </>
-            )}
-          </ModalContent>
-        </Modal>
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </div>
   );
 };

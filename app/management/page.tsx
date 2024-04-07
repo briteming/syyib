@@ -88,6 +88,40 @@ export default function Management() {
     hasMore,
     onLoadMore: list.loadMore,
   });
+  const { isOpen, onOpen, onOpenChange,onClose } = useDisclosure();
+  const [deleteIssueId, setDeleteIssueId] = useState(0);
+  const deleteDialog = (id: number) =>{
+    onOpen();
+    setDeleteIssueId(id);
+  }
+  const deleteIssue = async () => {
+    try {
+      const deleteIssueOctokit = new Octokit({ auth: `` });
+      const response = await deleteIssueOctokit.request(
+        `PUT /repos/Shih-Yang-Young/issue-blog/issues/${21}/lock`,
+        {
+          owner: "Shih-Yang-Young",
+          repo: "issue-blog",
+          issue_number: 21,
+          lock_reason : 'off-topic',
+          headers: {
+            "X-GitHub-Api-Version": "2022-11-28",
+          },
+        },
+      );
+      toast.success("delete issue success!", {
+        style: { background: "green", color: "white" },
+        position: "top-center",
+      });
+      onClose();
+    } catch (error) {
+      console.error("Error creating issue:", error);
+      toast.error("delete issue error", {
+        style: { background: "red", color: "white" },
+        position: "top-center",
+      });
+    }
+  };
   const renderCell = React.useCallback((issue, columnKey) => {
     const cellValue = issue[columnKey];
     switch (columnKey) {
@@ -116,7 +150,10 @@ export default function Management() {
               </span>
             </Tooltip>
             <Tooltip color="danger" content="Delete user">
-              <span className="text-lg text-danger cursor-pointer active:opacity-50">
+              <span
+                className="text-lg text-danger cursor-pointer active:opacity-50"
+                onClick={() => deleteDialog(issue.id)}
+              >
                 <DeleteIcon />
               </span>
             </Tooltip>
@@ -131,8 +168,8 @@ export default function Management() {
     return (
       <div>
         <div className="flex items-center justify-between my-4">
-        <h1 className={title()}>Management</h1>
-        <AddIssueModal/>
+          <h1 className={title()}>Management</h1>
+          <AddIssueModal />
         </div>
         <Table
           isHeaderSticky
@@ -174,7 +211,25 @@ export default function Management() {
             )}
           </TableBody>
         </Table>
-        
+        <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader className="flex flex-col">
+                  Are u sure delete {deleteIssueId}?
+                </ModalHeader>
+                <ModalFooter>
+                  <Button color="danger" variant="light" onPress={onClose}>
+                    Close
+                  </Button>
+                  <Button color="primary" onPress={deleteIssue}>
+                    Action
+                  </Button>
+                </ModalFooter>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
       </div>
     );
   }
