@@ -40,13 +40,13 @@ const CommentsModal: React.FC<IssueModalProps> = ({
             },
           },
         );
-        const commentsData = response.data.map((comment: any) => ({
+        const commentsData = response.data.map((comment: Comment) => ({
+            id: comment.id,
           body: comment.body,
         }));
         setComments(commentsData);
       } catch (error) {
         console.error("Error fetching comments:", error);
-        // Handle error, e.g., show error message
       }
     };
 
@@ -76,7 +76,9 @@ const CommentsModal: React.FC<IssueModalProps> = ({
                 {comments.length > 0 ? (
                   <ul>
                     {comments.map((comment, index) => (
-                      <li key={index}>{comment.body}</li>
+                      <li key={comment.id}>
+                        ID: {comment.id} - {comment.body}
+                      </li>
                     ))}
                   </ul>
                 ) : (
