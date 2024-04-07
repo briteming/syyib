@@ -21,10 +21,12 @@ const stateColorMap = {
 const username = 'Shih-Yang-Young';
 const repoName = 'issue-blog';
 const perPage = 10;
-const octokit = new Octokit({});
+
 
 export default function Management() {
   const { data: session } = useSession();
+  const accessToken = (session as any)?.access_token;
+  const octokit = new Octokit({ auth: `${accessToken}` });
   const [isLoading, setIsLoading] = React.useState(true);
   const [hasMore, setHasMore] = React.useState(false);
   const list = useAsyncList<GithubIssue>({
