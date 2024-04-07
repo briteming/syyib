@@ -5,15 +5,8 @@ import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinne
 import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
 import { useAsyncList } from "@react-stately/data";
 import { Octokit } from "octokit";
-
-export interface GithubIssue {
-  id: number;
-  title: string;
-  body: string | null;
-  comments_url: string;
-  updated_at: string;
-  state: string;
-}
+import { GithubIssue } from "./interfaces/GithubIssue";
+import { browseColumns } from "@/components/table";
 
 const octokit = new Octokit({});
 const username = 'Shih-Yang-Young';
@@ -78,13 +71,12 @@ export default function Browse() {
         }}
         onRowAction={(key) => alert(`Opening item ${key}...`)}
       >
-        <TableHeader>
-          <TableColumn key="id">Id</TableColumn>
-          <TableColumn key="title">Title</TableColumn>
-          <TableColumn key="body">Body</TableColumn>
-          <TableColumn key="updated_at">Updated At</TableColumn>
-          <TableColumn key="state">State</TableColumn>
-          <TableColumn key="comments">Comments</TableColumn>
+        <TableHeader columns={browseColumns}>
+          {(column) => (
+            <TableColumn key={column.uid} align={column.uid === "actions" ? "center" : "start"}>
+            {column.name}
+            </TableColumn>
+          )}
         </TableHeader>
         <TableBody
           isLoading={isLoading}

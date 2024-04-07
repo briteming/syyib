@@ -6,8 +6,8 @@ import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User, C
 import {EditIcon} from "./EditIcon";
 import {DeleteIcon} from "./DeleteIcon";
 import {EyeIcon} from "./EyeIcon";
-import {columns, users} from "./data";
-
+import { users} from "./data";
+import { columns } from "@/components/table";
 const statusColorMap = {
 	active: "success",
 	paused: "danger",
