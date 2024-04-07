@@ -6,12 +6,12 @@ import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User, C
 import {EditIcon} from "./EditIcon";
 import {DeleteIcon} from "./DeleteIcon";
 import {EyeIcon} from "./EyeIcon";
-import { users} from "./data";
+import { issues } from "./data";
 import { columns } from "@/components/table";
-const statusColorMap = {
-	active: "success",
-	paused: "danger",
-	vacation: "warning",
+const stateColorMap = {
+	open: "success",
+	closed: "danger",
+	"in progress": "warning",
   };
 
 export default function Management() {
@@ -37,9 +37,9 @@ export default function Management() {
             <p className="text-bold text-sm capitalize text-default-400">{user.team}</p>
           </div>
         );
-      case "status":
+      case "state":
         return (
-          <Chip className="capitalize" color={statusColorMap[user.status]} size="sm" variant="flat">
+          <Chip className="capitalize" color={stateColorMap[user.state]} size="sm" variant="flat">
             {cellValue}
           </Chip>
         );
@@ -85,7 +85,7 @@ export default function Management() {
 			</TableColumn>
 		)}
 		</TableHeader>
-		<TableBody items={users}>
+		<TableBody items={issues}>
 		{(item) => (
 			<TableRow key={item.id}>
 			{(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}

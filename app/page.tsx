@@ -5,7 +5,7 @@ import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinne
 import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
 import { useAsyncList } from "@react-stately/data";
 import { Octokit } from "octokit";
-import { GithubIssue } from "./interfaces/GithubIssue";
+import { GithubIssue } from "@/interfaces/GithubIssue";
 import { browseColumns } from "@/components/table";
 
 const octokit = new Octokit({});
