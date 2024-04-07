@@ -7,39 +7,43 @@ import { Button } from "@nextui-org/react";
 
 export default function Login() {
   const { data: session } = useSession();
-  
+
   const getGithubIssue = () => {
     const accessToken = (session as any)?.access_token;
-    
+
     if (!accessToken) {
-      console.error('No access token available.');
+      console.error("No access token available.");
       return;
     }
 
-    fetchGithubData(accessToken); 
+    fetchGithubData(accessToken);
   };
   const fetchGithubData = async (accessToken: any) => {
     try {
       const octokit = new Octokit({ auth: `${accessToken}` });
-      const response = await octokit.request('GET /repos/Shih-Yang-Chen/try-next/issues', {
-        headers: {
-          'X-GitHub-Api-Version': '2022-11-28'
-        }
-      })
+      const response = await octokit.request(
+        "GET /repos/Shih-Yang-Chen/try-next/issues",
+        {
+          headers: {
+            "X-GitHub-Api-Version": "2022-11-28",
+          },
+        },
+      );
       if (!response) {
-        throw new Error('Failed to fetch GitHub issues');
+        throw new Error("Failed to fetch GitHub issues");
       }
 
-      console.log(response); 
+      console.log(response);
     } catch (error) {
-      console.error('Error fetching GitHub issues:', error);
+      console.error("Error fetching GitHub issues:", error);
     }
   };
   if (session) {
     return (
       <div className="w-full h-screen flex flex-col justify-center items-center">
         <p className="text-2xl mb-2">
-          Welcome <span className="font-bold">{session.user?.name}</span>. Signed In As
+          Welcome <span className="font-bold">{session.user?.name}</span>.
+          Signed In As
         </p>
         <Button
           id="getUserData"
@@ -49,7 +53,10 @@ export default function Login() {
           Get GitHub Data
         </Button>
         <p className="font-bold mb-4">{session.user?.email}</p>
-        <button className="bg-red-600 py-2 px-6 rounded-md" onClick={() => signOut()}>
+        <button
+          className="bg-red-600 py-2 px-6 rounded-md"
+          onClick={() => signOut()}
+        >
           Sign out
         </button>
       </div>

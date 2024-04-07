@@ -1,7 +1,16 @@
 "use client";
 import { title } from "@/components/primitives";
 import React from "react";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, getKeyValue } from "@nextui-org/react";
+import {
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+  Spinner,
+  getKeyValue,
+} from "@nextui-org/react";
 import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
 import { useAsyncList } from "@react-stately/data";
 import { Octokit } from "octokit";
@@ -9,17 +18,17 @@ import { GithubIssue } from "@/interfaces/GithubIssue";
 import { browseColumns } from "@/composables/table";
 
 const octokit = new Octokit({});
-const username = 'Shih-Yang-Young';
-const repoName = 'issue-blog';
+const username = "Shih-Yang-Young";
+const repoName = "issue-blog";
 const perPage = 10;
 export default function Browse() {
   const [isLoading, setIsLoading] = React.useState(true);
   const [hasMore, setHasMore] = React.useState(false); // init true, cause need to load first data
   const list = useAsyncList<GithubIssue>({
     async load({ signal, cursor }) {
-      if(!cursor){
-        cursor = '1';
-      }else{
+      if (!cursor) {
+        cursor = "1";
+      } else {
         cursor = String(Number(cursor) + 1);
       }
       setIsLoading(true);
@@ -37,16 +46,16 @@ export default function Browse() {
         updated_at: issue.updated_at,
         state: issue.state,
       }));
-      if(response.data.length < perPage){
+      if (response.data.length < perPage) {
         setHasMore(false);
-      }else{
+      } else {
         setHasMore(true);
       }
       setIsLoading(false);
-      return { items: githubIssues, cursor: cursor.toString() }; 
+      return { items: githubIssues, cursor: cursor.toString() };
     },
   });
-  
+
   const [loaderRef, scrollerRef] = useInfiniteScroll({
     hasMore,
     onLoadMore: list.loadMore,
@@ -54,17 +63,23 @@ export default function Browse() {
   return (
     <div>
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-        <span className={`${title({ size: "sm", color: "violet" })} lg:text-2xl`}>{username}&nbsp;</span>
+        <span
+          className={`${title({ size: "sm", color: "violet" })} lg:text-2xl`}
+        >
+          {username}&nbsp;
+        </span>
       </section>
       <Table
         isHeaderSticky
         aria-label="Example table with infinite pagination"
         baseRef={scrollerRef}
-        bottomContent={hasMore ? (
-          <div className="flex w-full justify-center">
-            <Spinner ref={loaderRef} color="white" />
-          </div>
-        ) : null}
+        bottomContent={
+          hasMore ? (
+            <div className="flex w-full justify-center">
+              <Spinner ref={loaderRef} color="white" />
+            </div>
+          ) : null
+        }
         classNames={{
           base: "max-h-[500px]",
           table: "min-h-[500px]",
@@ -73,8 +88,11 @@ export default function Browse() {
       >
         <TableHeader columns={browseColumns}>
           {(column) => (
-            <TableColumn key={column.uid} align={column.uid === "actions" ? "center" : "start"}>
-            {column.name}
+            <TableColumn
+              key={column.uid}
+              align={column.uid === "actions" ? "center" : "start"}
+            >
+              {column.name}
             </TableColumn>
           )}
         </TableHeader>
@@ -85,7 +103,9 @@ export default function Browse() {
         >
           {(item) => (
             <TableRow key={item.id}>
-              {(columnKey) => <TableCell>{getKeyValue(item, columnKey)}</TableCell>}
+              {(columnKey) => (
+                <TableCell>{getKeyValue(item, columnKey)}</TableCell>
+              )}
             </TableRow>
           )}
         </TableBody>
