@@ -2,23 +2,66 @@
 import { title } from "@/components/primitives";
 import React from "react";
 import { useSession } from "next-auth/react";
-import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User, Chip, Tooltip, getKeyValue} from "@nextui-org/react";
+import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, Chip, Tooltip, getKeyValue} from "@nextui-org/react";
 import {EditIcon} from "./EditIcon";
 import {DeleteIcon} from "./DeleteIcon";
 import {EyeIcon} from "./EyeIcon";
-import { issues } from "./data";
 import { columns } from "@/composables/table";
+import { useAsyncList } from "@react-stately/data";
+import { GithubIssue } from "@/interfaces/GithubIssue";
+import { Octokit } from "octokit";
+import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
 const stateColorMap = {
 	open: "success",
 	closed: "danger",
 	"in progress": "warning",
   };
+const username = 'Shih-Yang-Young';
+const repoName = 'issue-blog';
+const perPage = 10;
+const octokit = new Octokit({});
 
 export default function Management() {
   const { data: session } = useSession();
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [hasMore, setHasMore] = React.useState(false);
+  const list = useAsyncList<GithubIssue>({
+    async load({ signal, cursor }) {
+      if(!cursor){
+        cursor = '1';
+      }else{
+        cursor = String(Number(cursor) + 1);
+      }
+      setIsLoading(true);
+      const response = await octokit.rest.issues.listForRepo({
+        owner: username,
+        repo: repoName,
+        per_page: perPage,
+        page: Number(cursor),
+      });
+      const githubIssues: GithubIssue[] = response.data.map((issue: any) => ({
+        id: issue.id,
+        title: issue.title,
+        body: issue.body || null,
+        comments_url: issue.comments_url,
+        updated_at: issue.updated_at,
+        state: issue.state,
+      }));
+      if(response.data.length < perPage){
+        setHasMore(false);
+      }else{
+        setHasMore(true);
+      }
+      setIsLoading(false);
+      return { items: githubIssues, cursor: cursor.toString() }; 
+    },
+  });
+  const [loaderRef, scrollerRef] = useInfiniteScroll({
+    hasMore,
+    onLoadMore: list.loadMore,
+  });
   const renderCell = React.useCallback((issue, columnKey) => {
     const cellValue = issue[columnKey];
-
     switch (columnKey) {
       case "state":
         return (
@@ -55,11 +98,18 @@ export default function Management() {
 	<div>
 	  <h1 className={title()}>Management</h1>
 	<Table 
+		isHeaderSticky
 		aria-label="Example table with custom cells"
+		baseRef={scrollerRef}
 		classNames={{
-			base: "w-full",
-			table: "min-h-[500px] max-w-5xl",
+			base: "max-h-[500px]",
+          	table: "min-h-[500px]",
 		}}
+		bottomContent={hasMore ? (
+		<div className="flex w-full justify-center">
+			<Spinner ref={loaderRef} color="white" />
+		</div>
+		) : null}
 	>
 		<TableHeader columns={columns}>
 		{(column) => (
@@ -68,7 +118,11 @@ export default function Management() {
 			</TableColumn>
 		)}
 		</TableHeader>
-		<TableBody items={issues}>
+		<TableBody 
+		  isLoading={isLoading}
+          items={list.items}
+          loadingContent={<Spinner color="white" />}
+		>
 		{(issue) => (
 			<TableRow key={issue.id}>
 			{(columnKey) => <TableCell>{renderCell(issue, columnKey)}</TableCell>}
