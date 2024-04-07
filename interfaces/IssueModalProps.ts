@@ -1,4 +1,4 @@
 export interface IssueModalProps {
-    issueNumber: number;
-    onResponse: () => void;
+  issueNumber: number;
+  onResponse: () => void;
 }

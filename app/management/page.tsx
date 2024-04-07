@@ -41,7 +41,7 @@ const stateColorMap: Record<string, string> = {
   open: "success",
   closed: "danger",
   "in progress": "warning",
-}
+};
 const username = "Shih-Yang-Young";
 const repoName = "issue-blog";
 const perPage = 10;
@@ -77,7 +77,9 @@ export default function Management() {
         state: issue.state,
         locked: issue.locked,
       }));
-      const unlockedIssues = githubIssues.filter(issue => issue.locked === false);
+      const unlockedIssues = githubIssues.filter(
+        (issue) => issue.locked === false,
+      );
       if (response.data.length < perPage) {
         setHasMore(false);
       } else {
@@ -89,7 +91,7 @@ export default function Management() {
   });
   const handleModalSuccess = () => {
     list.reload();
-  }
+  };
   const [loaderRef, scrollerRef] = useInfiniteScroll({
     hasMore,
     onLoadMore: list.loadMore,
@@ -99,12 +101,7 @@ export default function Management() {
     switch (columnKey) {
       case "state":
         return (
-          <Chip
-            className="capitalize"
-            color="default"
-            size="sm"
-            variant="flat"
-          >
+          <Chip className="capitalize" color="default" size="sm" variant="flat">
             {cellValue}
           </Chip>
         );
@@ -119,9 +116,9 @@ export default function Management() {
               issueNumber={issue.number}
               onResponse={handleModalSuccess}
             />
-            <DeleteIssueModal 
+            <DeleteIssueModal
               issueNumber={issue.number}
-              onResponse={handleModalSuccess}             
+              onResponse={handleModalSuccess}
             />
           </div>
         );
@@ -129,7 +126,7 @@ export default function Management() {
         return cellValue;
     }
   }, []);
-  
+
   if (session) {
     return (
       <div>

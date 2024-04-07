@@ -49,7 +49,9 @@ export default function Browse() {
         state: issue.state,
         locked: issue.locked,
       }));
-      const unlockedIssues = githubIssues.filter(issue => issue.locked === false);
+      const unlockedIssues = githubIssues.filter(
+        (issue) => issue.locked === false,
+      );
       if (response.data.length < perPage) {
         setHasMore(false);
       } else {
