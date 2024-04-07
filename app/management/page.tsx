@@ -7,7 +7,7 @@ import {EditIcon} from "./EditIcon";
 import {DeleteIcon} from "./DeleteIcon";
 import {EyeIcon} from "./EyeIcon";
 import { issues } from "./data";
-import { columns } from "@/components/table";
+import { columns } from "@/composables/table";
 const stateColorMap = {
 	open: "success",
 	closed: "danger",

@@ -6,7 +6,7 @@ import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
 import { useAsyncList } from "@react-stately/data";
 import { Octokit } from "octokit";
 import { GithubIssue } from "@/interfaces/GithubIssue";
-import { browseColumns } from "@/components/table";
+import { browseColumns } from "@/composables/table";
 
 const octokit = new Octokit({});
 const username = 'Shih-Yang-Young';
