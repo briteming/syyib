@@ -15,9 +15,6 @@ import {
   getKeyValue,
   Textarea,
 } from "@nextui-org/react";
-import { EditIcon } from "./EditIcon";
-import { DeleteIcon } from "./DeleteIcon";
-import { EyeIcon } from "./EyeIcon";
 import { managementColumns } from "@/composables/table";
 import { useAsyncList } from "@react-stately/data";
 import { GithubIssue } from "@/interfaces/GithubIssue";
