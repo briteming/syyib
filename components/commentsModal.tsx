@@ -1,3 +1,4 @@
+"use client";
 import { EyeIcon } from "@/app/management/EyeIcon";
 import { IssueModalProps } from "@/interfaces/IssueModalProps";
 import {
@@ -24,7 +25,9 @@ const CommentsModal: React.FC<IssueModalProps> = ({issueNumber, onResponse}) => 
               'X-GitHub-Api-Version': '2022-11-28'
             }
           })
-        console.log(response)
+        return response.data.map((comment: any) => ({
+            body: comment.body,
+        }));
     }
     
     return(
@@ -45,7 +48,7 @@ const CommentsModal: React.FC<IssueModalProps> = ({issueNumber, onResponse}) => 
                       Issue Number {issueNumber} Comments
                     </ModalHeader>
                     <ModalBody>
-                      aaa
+                        aaa
                     </ModalBody>
                     <ModalFooter>
                       <Button color="primary" variant="flat" onPress={onClose}>
