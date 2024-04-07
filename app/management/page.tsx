@@ -1,6 +1,6 @@
 "use client";
 import { title } from "@/components/primitives";
-import React from "react";
+import React, { useState } from "react";
 import { useSession } from "next-auth/react";
 import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, Chip, Tooltip, getKeyValue, Textarea} from "@nextui-org/react";
 import {EditIcon} from "./EditIcon";
@@ -27,6 +27,7 @@ export default function Management() {
   const { data: session } = useSession();
   const accessToken = (session as any)?.access_token;
   const octokit = new Octokit({ auth: `${accessToken}` });
+  const octokit1 = new Octokit({  });
   const [isLoading, setIsLoading] = React.useState(true);
   const [hasMore, setHasMore] = React.useState(false);
   const list = useAsyncList<GithubIssue>({
@@ -98,11 +99,28 @@ export default function Management() {
     }
   }, []);
 
-  const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const {isOpen, onOpen, onClose, onOpenChange} = useDisclosure();
+  const [issueTitle, setIssueTitle] = useState('');
+  const [issueBody, setIssueBody] = useState('');
+  const addIssue = async () => {
+	try {
+	  const response = await octokit1.request(`POST /repos/${username}/${repoName}/issues`, {
+		owner: username,
+		repo: repoName,
+		title: issueTitle,
+		body: issueBody,
+		headers: {
+		  'X-GitHub-Api-Version': '2022-11-28'
+		}
+	  });
+	  console.log("response", response);
+	  onClose();
+	} catch (error) {
+	  console.error('Error creating issue:', error);
+	}
+  }
 
-
-
-  if(session){
+  if(!session){
 	return (
 	<div>
 	  <h1 className={title()}>Management</h1>
@@ -156,19 +174,23 @@ export default function Management() {
                   placeholder="Enter your title"
                   variant="bordered"
 				  required
+				  value={issueTitle}
+				  onChange={(e) => setIssueTitle(e.target.value)}
                 />
                 <Textarea
                   label="body"
                   placeholder="Enter your body"
                   variant="bordered"
 				  size="lg"
+				  value={issueBody}
+                  onChange={(e) => setIssueBody(e.target.value)}
                 />
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="flat" onPress={onClose}>
                   Close
                 </Button>
-                <Button color="primary" onPress={onClose}>
+                <Button color="primary" onPress={addIssue}>
                   Add New Issue
                 </Button>
               </ModalFooter>
