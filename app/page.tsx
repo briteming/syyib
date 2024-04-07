@@ -32,11 +32,13 @@ export default function Browse() {
         cursor = String(Number(cursor) + 1);
       }
       setIsLoading(true);
+      const randomParam = Math.random().toString(36).substring(7);
       const response = await octokit.rest.issues.listForRepo({
         owner: username,
         repo: repoName,
         per_page: perPage,
         page: Number(cursor),
+        url: `https://api.github.com/repos/Shih-Yang-Young/issue-blog/issues?random=${randomParam}`,
       });
       const githubIssues: GithubIssue[] = response.data.map((issue: any) => ({
         number: issue.number,
