@@ -18,20 +18,25 @@ export interface GithubIssue {
 const octokit = new Octokit({});
 const username = 'Shih-Yang-Young';
 const repoName = 'issue-blog';
-
+const perPage = 10;
 export default function Browse() {
   const [isLoading, setIsLoading] = React.useState(true);
   const [hasMore, setHasMore] = React.useState(false); // init true, cause need to load first data
-  const [cursorCount, setCursorCount] = React.useState(1);
   const list = useAsyncList<GithubIssue>({
     async load({ signal, cursor }) {
+      if(!cursor){
+        cursor = '1';
+      }else{
+        cursor = String(Number(cursor) + 1);
+      }
       setIsLoading(true);
-        const response = await octokit.rest.issues.listForRepo({
-          owner: username,
-          repo: repoName,
-          per_page: 10,
-          page: cursorCount,
-        });
+      const response = await octokit.rest.issues.listForRepo({
+        owner: username,
+        repo: repoName,
+        per_page: perPage,
+        page: Number(cursor),
+      });
+      console.log("i am ", response.data.length);
       const githubIssues: GithubIssue[] = response.data.map((issue: any) => ({
         id: issue.id,
         title: issue.title,
@@ -40,10 +45,13 @@ export default function Browse() {
         updated_at: issue.updated_at,
         state: issue.state,
       }));
-      setHasMore(cursorCount < 2);
+      if(response.data.length < perPage){
+        setHasMore(false);
+      }else{
+        setHasMore(true);
+      }
       setIsLoading(false);
-      setCursorCount(cursorCount + 1);
-      return { items: githubIssues, cursor: cursorCount.toString() }; 
+      return { items: githubIssues, cursor: cursor.toString() }; 
     },
   });
   
