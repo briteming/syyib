@@ -27,7 +27,8 @@ export default function Management() {
   const { data: session } = useSession();
   const accessToken = (session as any)?.access_token;
   const octokit = new Octokit({ auth: `${accessToken}` });
-  const octokit1 = new Octokit({  });
+  console.log("accessToken",accessToken );
+  const addIssueOctokit = new Octokit({ auth:`` });
   const [isLoading, setIsLoading] = React.useState(true);
   const [hasMore, setHasMore] = React.useState(false);
   const list = useAsyncList<GithubIssue>({
@@ -104,7 +105,7 @@ export default function Management() {
   const [issueBody, setIssueBody] = useState('');
   const addIssue = async () => {
 	try {
-	  const response = await octokit1.request(`POST /repos/${username}/${repoName}/issues`, {
+	  const response = await addIssueOctokit.request(`POST /repos/${username}/${repoName}/issues`, {
 		owner: username,
 		repo: repoName,
 		title: issueTitle,
@@ -120,7 +121,7 @@ export default function Management() {
 	}
   }
 
-  if(!session){
+  if(session){
 	return (
 	<div>
 	  <h1 className={title()}>Management</h1>
