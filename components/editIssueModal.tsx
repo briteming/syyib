@@ -18,7 +18,6 @@ import { EditIcon } from "@/app/management/EditIcon";
 
 
 const EditIssueModal: React.FC<IssueModalProps> = ({issueNumber, onResponse}) => {
-  console.log("aaaa");
   const [issueTitle, setIssueTitle] = useState("");
   const [issueBody, setIssueBody] = useState("");
   const editIssue = async () => {

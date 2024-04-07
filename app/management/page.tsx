@@ -39,7 +39,7 @@ import { toast } from "react-hot-toast";
 import AddIssueModal from "@/components/addIssueModal";
 import DeleteIssueModal from "@/components/deleteIssueModal";
 import EditIssueModal from "@/components/editIssueModal";
-
+import CommentsModal from "@/components/commentsModal";
 const stateColorMap: Record<string, string> = {
   open: "success",
   closed: "danger",
@@ -114,11 +114,10 @@ export default function Management() {
       case "actions":
         return (
           <div className="relative flex items-center gap-2">
-            <Tooltip content="Details">
-              <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                <EyeIcon />
-              </span>
-            </Tooltip>
+            <CommentsModal
+              issueNumber={issue.number}
+              onResponse={handleModalSuccess}
+            />
             <EditIssueModal
               issueNumber={issue.number}
               onResponse={handleModalSuccess}
