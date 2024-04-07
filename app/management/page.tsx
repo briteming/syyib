@@ -50,7 +50,7 @@ const perPage = 10;
 export default function Management() {
   const { data: session } = useSession();
   const accessToken = (session as any)?.access_token;
-  const octokit = new Octokit({ auth: `${accessToken}` });
+  const octokit = new Octokit();
   const [isLoading, setIsLoading] = React.useState(true);
   const [hasMore, setHasMore] = React.useState(false);
   const list = useAsyncList<GithubIssue>({

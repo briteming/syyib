@@ -12,10 +12,6 @@ export const siteConfig = {
       label: "Management",
       href: "/management",
     },
-    {
-      label: "About",
-      href: "/about",
-    },
   ],
   navMenuItems: [
     {
