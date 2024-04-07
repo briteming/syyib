@@ -38,6 +38,7 @@ import {
 import { toast } from "react-hot-toast";
 import AddIssueModal from "@/components/addIssueModal";
 import DeleteIssueModal from "@/components/deleteIssueModal";
+import EditIssueModal from "@/components/editIssueModal";
 
 const stateColorMap: Record<string, string> = {
   open: "success",
@@ -89,7 +90,7 @@ export default function Management() {
       return { items: unlockedIssues, cursor: cursor.toString() };
     },
   });
-  const handleDeleteSuccess = () => {
+  const handleModalSuccess = () => {
     list.reload();
   }
   const [loaderRef, scrollerRef] = useInfiniteScroll({
@@ -118,14 +119,13 @@ export default function Management() {
                 <EyeIcon />
               </span>
             </Tooltip>
-            <Tooltip content="Edit user">
-              <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                <EditIcon />
-              </span>
-            </Tooltip>
+            <EditIssueModal
+              issueNumber={issue.number}
+              onResponse={handleModalSuccess}
+            />
             <DeleteIssueModal 
-              deleteIssueNumber={issue.number}
-              onResponse={handleDeleteSuccess}             
+              issueNumber={issue.number}
+              onResponse={handleModalSuccess}             
             />
           </div>
         );

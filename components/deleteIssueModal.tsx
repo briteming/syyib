@@ -1,4 +1,5 @@
 import { DeleteIcon } from "@/app/management/DeleteIcon";
+import { IssueModalProps } from "@/interfaces/IssueModalProps";
 import {
     Modal,
     ModalContent,
@@ -14,12 +15,8 @@ import {
   } from "@nextui-org/react";
 import { Octokit } from "octokit";
 import { toast } from "react-hot-toast";
-interface DeleteIssueModalProps {
-    deleteIssueNumber: number;
-    onResponse: () => void;
-}
-const DeleteIssueModal: React.FC<DeleteIssueModalProps> = ({deleteIssueNumber, onResponse}) => {
-    console.log("i a m son");
+
+const DeleteIssueModal: React.FC<IssueModalProps> = ({issueNumber, onResponse}) => {
     const deleteDialog = (id: number) =>{
         onOpen();
       }
@@ -27,11 +24,11 @@ const DeleteIssueModal: React.FC<DeleteIssueModalProps> = ({deleteIssueNumber, o
         try {
           const deleteIssueOctokit = new Octokit({ auth: `` });
           const response = await deleteIssueOctokit.request(
-            `PUT /repos/Shih-Yang-Young/issue-blog/issues/${deleteIssueNumber}/lock`,
+            `PUT /repos/Shih-Yang-Young/issue-blog/issues/${issueNumber}/lock`,
             {
               owner: "Shih-Yang-Young",
               repo: "issue-blog",
-              issue_number: deleteIssueNumber,
+              issue_number: issueNumber,
               lock_reason : 'off-topic',
               headers: {
                 "X-GitHub-Api-Version": "2022-11-28",
@@ -58,7 +55,7 @@ const DeleteIssueModal: React.FC<DeleteIssueModalProps> = ({deleteIssueNumber, o
             <Tooltip color="danger" content="Delete user">
                 <span
                 className="text-lg text-danger cursor-pointer active:opacity-50"
-                onClick={() => deleteDialog(deleteIssueNumber)}
+                onClick={() => deleteDialog(issueNumber)}
                 >
                 <DeleteIcon />
                 </span>
@@ -68,7 +65,7 @@ const DeleteIssueModal: React.FC<DeleteIssueModalProps> = ({deleteIssueNumber, o
             {(onClose) => (
               <>
                 <ModalHeader className="flex flex-col">
-                  Are u sure delete {deleteIssueNumber}?
+                  Are u sure delete {issueNumber}?
                 </ModalHeader>
                 <ModalFooter>
                   <Button color="danger" variant="light" onPress={onClose}>
