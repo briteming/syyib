@@ -52,7 +52,7 @@ const DeleteIssueModal: React.FC<IssueModalProps> = ({issueNumber, onResponse}) 
     const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
     return(
         <div>
-            <Tooltip color="danger" content="Delete user">
+            <Tooltip color="danger" content="Delete Issue">
                 <span
                 className="text-lg text-danger cursor-pointer active:opacity-50"
                 onClick={() => deleteDialog(issueNumber)}
@@ -65,7 +65,7 @@ const DeleteIssueModal: React.FC<IssueModalProps> = ({issueNumber, onResponse}) 
             {(onClose) => (
               <>
                 <ModalHeader className="flex flex-col">
-                  Are u sure delete {issueNumber}?
+                  Are u Sure Delete Issue Number {issueNumber}?
                 </ModalHeader>
                 <ModalFooter>
                   <Button color="danger" variant="light" onPress={onClose}>
