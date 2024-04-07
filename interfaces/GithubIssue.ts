@@ -5,4 +5,5 @@ export interface GithubIssue {
   comments_url: string;
   updated_at: string;
   state: string;
+  locked: boolean;
 }

@@ -45,14 +45,16 @@ export default function Browse() {
         comments_url: issue.comments_url,
         updated_at: issue.updated_at,
         state: issue.state,
+        locked: issue.locked,
       }));
+      const unlockedIssues = githubIssues.filter(issue => issue.locked === false);
       if (response.data.length < perPage) {
         setHasMore(false);
       } else {
         setHasMore(true);
       }
       setIsLoading(false);
-      return { items: githubIssues, cursor: cursor.toString() };
+      return { items: unlockedIssues, cursor: cursor.toString() };
     },
   });
 

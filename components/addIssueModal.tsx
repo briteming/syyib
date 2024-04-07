@@ -32,7 +32,6 @@ const AddIssueModal = () => {
           },
         },
       );
-      console.log("response", response);
       toast.success("add issue success!", {
         style: { background: "green", color: "white" },
         position: "top-center",
