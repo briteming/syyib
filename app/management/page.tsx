@@ -50,8 +50,6 @@ export default function Management() {
   const { data: session } = useSession();
   const accessToken = (session as any)?.access_token;
   const octokit = new Octokit({ auth: `${accessToken}` });
-  console.log("accessToken", accessToken);
-  const addIssueOctokit = new Octokit({ auth: `` });
   const [isLoading, setIsLoading] = React.useState(true);
   const [hasMore, setHasMore] = React.useState(false);
   const list = useAsyncList<GithubIssue>({
@@ -131,8 +129,10 @@ export default function Management() {
   const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
   const [issueTitle, setIssueTitle] = useState("");
   const [issueBody, setIssueBody] = useState("");
+  const [fineGrainedAccessToken, setFineGrainedAccessToken] = useState("");
   const addIssue = async () => {
     try {
+      const addIssueOctokit = new Octokit({ auth: fineGrainedAccessToken });
       const response = await addIssueOctokit.request(
         `POST /repos/${username}/${repoName}/issues`,
         {
@@ -163,10 +163,12 @@ export default function Management() {
   if (session) {
     return (
       <div>
+        <div className="flex items-center justify-between my-4">
         <h1 className={title()}>Management</h1>
         <Button onPress={onOpen} color="primary">
           Add Issue
         </Button>
+        </div>
         <Table
           isHeaderSticky
           aria-label="Example table with custom cells"
@@ -219,6 +221,15 @@ export default function Management() {
                   Add New Issue
                 </ModalHeader>
                 <ModalBody>
+                  <Input
+                    autoFocus
+                    label="fine grained access token"
+                    placeholder="Enter your fine grained access token"
+                    variant="bordered"
+                    required
+                    value={fineGrainedAccessToken}
+                    onChange={(e) => setFineGrainedAccessToken(e.target.value)}
+                  />
                   <Input
                     autoFocus
                     label="title"
