@@ -2,7 +2,7 @@
 import { title } from "@/components/primitives";
 import React from "react";
 import { useSession } from "next-auth/react";
-import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, Chip, Tooltip, getKeyValue} from "@nextui-org/react";
+import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, Chip, Tooltip, getKeyValue, Textarea} from "@nextui-org/react";
 import {EditIcon} from "./EditIcon";
 import {DeleteIcon} from "./DeleteIcon";
 import {EyeIcon} from "./EyeIcon";
@@ -11,6 +11,8 @@ import { useAsyncList } from "@react-stately/data";
 import { GithubIssue } from "@/interfaces/GithubIssue";
 import { Octokit } from "octokit";
 import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Checkbox, Input, Link} from "@nextui-org/react";
+
 const stateColorMap = {
 	open: "success",
 	closed: "danger",
@@ -93,10 +95,16 @@ export default function Management() {
         return cellValue;
     }
   }, []);
+
+  const {isOpen, onOpen, onOpenChange} = useDisclosure();
+
+
+
   if(session){
 	return (
 	<div>
 	  <h1 className={title()}>Management</h1>
+	  <Button onPress={onOpen} color="primary">Add Issue</Button>
 	<Table 
 		isHeaderSticky
 		aria-label="Example table with custom cells"
@@ -130,6 +138,42 @@ export default function Management() {
 		)}
 		</TableBody>
 	</Table>
+	<Modal 
+        isOpen={isOpen} 
+        onOpenChange={onOpenChange}
+        placement="top-center"
+      >
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">Add New Issue</ModalHeader>
+              <ModalBody>
+                <Input
+                  autoFocus
+                  label="title"
+                  placeholder="Enter your title"
+                  variant="bordered"
+				  required
+                />
+                <Textarea
+                  label="body"
+                  placeholder="Enter your body"
+                  variant="bordered"
+				  size="lg"
+                />
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="flat" onPress={onClose}>
+                  Close
+                </Button>
+                <Button color="primary" onPress={onClose}>
+                  Add New Issue
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
 	</div>
 	);
   }
