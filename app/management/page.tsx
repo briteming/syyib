@@ -37,6 +37,7 @@ import {
 } from "@nextui-org/react";
 import { toast } from "react-hot-toast";
 import AddIssueModal from "@/components/addIssueModal";
+import DeleteIssueModal from "@/components/deleteIssueModal";
 
 const stateColorMap: Record<string, string> = {
   open: "success",
@@ -88,45 +89,13 @@ export default function Management() {
       return { items: unlockedIssues, cursor: cursor.toString() };
     },
   });
+  const handleDeleteSuccess = () => {
+    list.reload();
+  }
   const [loaderRef, scrollerRef] = useInfiniteScroll({
     hasMore,
     onLoadMore: list.loadMore,
   });
-  const { isOpen, onOpen, onOpenChange,onClose } = useDisclosure();
-  const [deleteIssueNumber, setDeleteIssueNumber] = useState(0);
-  const deleteDialog = (id: number) =>{
-    onOpen();
-    setDeleteIssueNumber(id);
-  }
-  const deleteIssue = async () => {
-    try {
-      const deleteIssueOctokit = new Octokit({ auth: `` });
-      const response = await deleteIssueOctokit.request(
-        `PUT /repos/Shih-Yang-Young/issue-blog/issues/${deleteIssueNumber}/lock`,
-        {
-          owner: "Shih-Yang-Young",
-          repo: "issue-blog",
-          issue_number: deleteIssueNumber,
-          lock_reason : 'off-topic',
-          headers: {
-            "X-GitHub-Api-Version": "2022-11-28",
-          },
-        },
-      );
-      toast.success("delete issue success!", {
-        style: { background: "green", color: "white" },
-        position: "top-center",
-      });
-      list.reload();
-      onClose();
-    } catch (error) {
-      console.error("Error creating issue:", error);
-      toast.error("delete issue error", {
-        style: { background: "red", color: "white" },
-        position: "top-center",
-      });
-    }
-  };
   const renderCell = React.useCallback((issue: any, columnKey: any) => {
     const cellValue = issue[columnKey];
     switch (columnKey) {
@@ -154,21 +123,17 @@ export default function Management() {
                 <EditIcon />
               </span>
             </Tooltip>
-            <Tooltip color="danger" content="Delete user">
-              <span
-                className="text-lg text-danger cursor-pointer active:opacity-50"
-                onClick={() => deleteDialog(issue.number)}
-              >
-                <DeleteIcon />
-              </span>
-            </Tooltip>
+            <DeleteIssueModal 
+              deleteIssueNumber={issue.number}
+              onResponse={handleDeleteSuccess}             
+            />
           </div>
         );
       default:
         return cellValue;
     }
   }, []);
-
+  
   if (session) {
     return (
       <div>
@@ -216,25 +181,6 @@ export default function Management() {
             )}
           </TableBody>
         </Table>
-        <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-          <ModalContent>
-            {(onClose) => (
-              <>
-                <ModalHeader className="flex flex-col">
-                  Are u sure delete {deleteIssueNumber}?
-                </ModalHeader>
-                <ModalFooter>
-                  <Button color="danger" variant="light" onPress={onClose}>
-                    Close
-                  </Button>
-                  <Button color="primary" onPress={deleteIssue}>
-                    Action
-                  </Button>
-                </ModalFooter>
-              </>
-            )}
-          </ModalContent>
-        </Modal>
       </div>
     );
   }
