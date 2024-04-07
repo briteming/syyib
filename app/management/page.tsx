@@ -12,6 +12,7 @@ import { GithubIssue } from "@/interfaces/GithubIssue";
 import { Octokit } from "octokit";
 import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Checkbox, Input, Link} from "@nextui-org/react";
+import { toast } from 'react-hot-toast';
 
 const stateColorMap = {
 	open: "success",
@@ -115,12 +116,16 @@ export default function Management() {
 		}
 	  });
 	  console.log("response", response);
+	  toast.success('add issue success!', {style: {background: 'green',color:"white"},position:"top-center"});
 	  onClose();
 	} catch (error) {
 	  console.error('Error creating issue:', error);
+	  toast.error('add issue error', {style: {background: 'red',color:"white"},position:"top-center"});
 	}
   }
-
+  const handleButtonClick = () => {
+    
+  };
   if(session){
 	return (
 	<div>
