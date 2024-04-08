@@ -129,7 +129,10 @@ export default function Management() {
       <div>
         <div className="flex items-center justify-between my-4">
           <h1 className={title()}>Management</h1>
-          <AddIssueModal />
+          <AddIssueModal 
+            onResponse= {handleModalSuccess}
+            issueNumber={0}
+          />
         </div>
         <Table
           isHeaderSticky

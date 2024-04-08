@@ -13,8 +13,12 @@ import {
 import { Octokit } from "octokit";
 import { toast } from "react-hot-toast";
 import { validateIssueFields } from "./validateUpsertIssue";
+import { IssueModalProps } from "@/interfaces/IssueModalProps";
 
-const AddIssueModal = () => {
+const AddIssueModal: React.FC<IssueModalProps> = ({
+  issueNumber,
+  onResponse,
+}) => {
   const [issueTitle, setIssueTitle] = useState("");
   const [issueBody, setIssueBody] = useState("");
   const [fineGrainedAccessToken, setFineGrainedAccessToken] = useState("");
@@ -40,6 +44,7 @@ const AddIssueModal = () => {
         style: { background: "green", color: "white" },
         position: "top-center",
       });
+      onResponse();
       onClose();
     } catch (error) {
       console.error("Error creating issue:", error);
