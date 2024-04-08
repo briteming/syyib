@@ -47,9 +47,7 @@ const EditIssueModal: React.FC<IssueModalProps> = ({
         position: "top-center",
       });
       onClose();
-      setTimeout(() => {
-        onResponse();
-      }, 2000);
+      onResponse();
     } catch (error: any) {
       let msg = "";
       if (error.response.status === 401) {
