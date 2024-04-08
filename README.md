@@ -2,6 +2,26 @@
 
 使用 Next.js 搭配 NextUI UI Framework，設計一個串接 Github Issue 的部落格專案，功能包括實施 Oauth 登入 Github，查詢使用者 Repo 對應的所有 Issue 列表、Issue 個別的 Comments，以及新增、修改、Lock Issue。在顯示所有 Issue 時也實做了無限滾動功能。
 
+## 如何使用
+
+### live demo
+
+https://issue-blog-eight.vercel.app/
+
+### local 環境
+
+Install dependencies
+
+```bash
+npm install
+```
+
+Run the development server
+
+```bash
+npm npm run dev
+```
+
 ## 使用技術
 
 - [Next.js 14](https://nextjs.org/docs/getting-started)
@@ -15,29 +35,3 @@
 - [Github Octokit](https://octokit.github.io/rest.js/v20)
 - [NextAuth.js](https://next-auth.js.org/)
 - [vercel](hhttps://vercel.com/)
-
-## How to Use
-
-### Use the template with create-next-app
-
-To create a new project based on this template using `create-next-app`, run the following command:
-
-```bash
-npx create-next-app -e https://github.com/nextui-org/next-app-template
-```
-
-### Install dependencies
-
-```bash
-npm install
-```
-
-### Run the development server
-
-```bash
-npm run dev
-```
-
-## License
-
-Licensed under the [MIT license](https://github.com/nextui-org/next-app-template/blob/main/LICENSE).
