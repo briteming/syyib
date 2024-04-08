@@ -29,7 +29,7 @@ const EditIssueModal: React.FC<IssueModalProps> = ({
     }
     try {
       const editIssueOctokit = new Octokit({ auth: `` });
-      const response = editIssueOctokit.request(
+      const response = await editIssueOctokit.request(
         `PATCH /repos/Shih-Yang-Young/issue-blog/issues/${issueNumber}`,
         {
           owner: "Shih-Yang-Young",
@@ -50,9 +50,15 @@ const EditIssueModal: React.FC<IssueModalProps> = ({
       setTimeout(() => {
         onResponse();
       }, 2000);
-    } catch (error) {
-      console.error("Error creating issue:", error);
-      toast.error("add issue error", {
+    } catch (error: any) {
+      let msg = "";
+      if (error.response.status === 401) {
+        msg = "requires authentication. Need fine grained access token to add issue";
+      }
+      else if (error.response.status === 403) {
+        msg = "must have admin rights to Repository. Need fine grained access token to add issue";
+      }
+      toast.error("delete issue error " + msg, {
         style: { background: "red", color: "white" },
         position: "top-center",
       });
