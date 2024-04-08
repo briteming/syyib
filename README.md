@@ -10,10 +10,23 @@ https://issue-blog-eight.vercel.app/
 
 ### local 環境
 
-Install dependencies
+step1: Install dependencies
 
 ```bash
 npm install
+```
+
+step1: 在.env 輸入你的 Github Client ID 和 Github Client secrets
+
+- 因為在使用 web 實施獲取 Github Oauth 時，Github 簽章規定一定要有 Client 端的 Client ID 和 Client secrets
+  可參考https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps#web-application-flow
+
+- Github 獲取 Client ID 和 Client secrets 位置 https://github.com/settings/developers，請點選OAuth Apps -> New OAuth App 進行 Create
+
+```bash
+***.env***
+GITHUB_ID=你的Client ID
+GITHUB_SECRET=你的Client secrets
 ```
 
 Run the development server
