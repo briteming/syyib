@@ -1,6 +1,6 @@
 "use client";
 import { title } from "@/components/primitives";
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import {
   Table,
@@ -11,27 +11,12 @@ import {
   TableCell,
   Spinner,
   Chip,
-  Tooltip,
-  getKeyValue,
-  Textarea,
 } from "@nextui-org/react";
 import { managementColumns } from "@/composables/table";
 import { useAsyncList } from "@react-stately/data";
 import { GithubIssue } from "@/interfaces/GithubIssue";
 import { Octokit } from "octokit";
 import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-  useDisclosure,
-  Checkbox,
-  Input,
-  Link,
-} from "@nextui-org/react";
 import { toast } from "react-hot-toast";
 import AddIssueModal from "@/components/addIssueModal";
 import DeleteIssueModal from "@/components/deleteIssueModal";
@@ -49,10 +34,20 @@ const perPage = 10;
 
 export default function Management() {
   const { data: session } = useSession();
-  const accessToken = (session as any)?.access_token;
   const octokit = new Octokit();
   const [isLoading, setIsLoading] = React.useState(true);
   const [hasMore, setHasMore] = React.useState(false);
+  useEffect(() => {
+    if (sessionStorage.getItem("fineGrainedAccessToken") == null &&
+     sessionStorage.getItem("toggle") == null) {
+      toast('add fine grained token to manipulate issue !!', {
+        style: { background: "#F57512", color: "white" },
+        position: "top-center",
+        duration: 8000,
+      });
+      sessionStorage.setItem("toggle", "true");
+    }
+  }, []);
   const list = useAsyncList<GithubIssue>({
     async load({ signal, cursor }) {
       if (!cursor) {

@@ -1,4 +1,9 @@
 {
   "typescript.tsdk": "node_modules/typescript/lib",
-  "cSpell.words": ["Shih", "Upsert"]
+  "cSpell.words": [
+    "composables",
+    "nextui",
+    "Shih",
+    "Upsert"
+  ]
 }
