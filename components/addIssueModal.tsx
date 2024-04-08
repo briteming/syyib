@@ -21,14 +21,15 @@ const AddIssueModal: React.FC<IssueModalProps> = ({
 }) => {
   const [issueTitle, setIssueTitle] = useState("");
   const [issueBody, setIssueBody] = useState("");
-  const [fineGrainedAccessToken, setFineGrainedAccessToken] = useState("");
   const addIssue = async () => {
     if (!validateIssueFields(issueTitle, issueBody)) {
       return;
     }
     try {
-      const addIssueOctokit = new Octokit({ auth: fineGrainedAccessToken });
-      const response = await addIssueOctokit.request(
+      const octokit = new Octokit({
+        auth: sessionStorage.getItem("fineGrainedAccessToken"),
+      });
+      const response = await octokit.request(
         `POST /repos/Shih-Yang-Young/issue-blog/issues`,
         {
           owner: "Shih-Yang-Young",
@@ -72,15 +73,6 @@ const AddIssueModal: React.FC<IssueModalProps> = ({
                 Add New Issue
               </ModalHeader>
               <ModalBody>
-                <Input
-                  autoFocus
-                  label="fine grained access token"
-                  placeholder="Enter your fine grained access token"
-                  variant="bordered"
-                  required
-                  value={fineGrainedAccessToken}
-                  onChange={(e) => setFineGrainedAccessToken(e.target.value)}
-                />
                 <Input
                   autoFocus
                   label="title"

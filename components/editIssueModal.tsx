@@ -28,8 +28,10 @@ const EditIssueModal: React.FC<IssueModalProps> = ({
       return;
     }
     try {
-      const editIssueOctokit = new Octokit({ auth: `` });
-      const response = await editIssueOctokit.request(
+      const octokit = new Octokit({
+        auth: sessionStorage.getItem("fineGrainedAccessToken"),
+      });
+      const response = await octokit.request(
         `PATCH /repos/Shih-Yang-Young/issue-blog/issues/${issueNumber}`,
         {
           owner: "Shih-Yang-Young",
@@ -51,10 +53,11 @@ const EditIssueModal: React.FC<IssueModalProps> = ({
     } catch (error: any) {
       let msg = "";
       if (error.response.status === 401) {
-        msg = "requires authentication. Need fine grained access token to add issue";
-      }
-      else if (error.response.status === 403) {
-        msg = "must have admin rights to Repository. Need fine grained access token to add issue";
+        msg =
+          "requires authentication. Need fine grained access token to add issue";
+      } else if (error.response.status === 403) {
+        msg =
+          "must have admin rights to Repository. Need fine grained access token to add issue";
       }
       toast.error("delete issue error " + msg, {
         style: { background: "red", color: "white" },
@@ -104,7 +107,7 @@ const EditIssueModal: React.FC<IssueModalProps> = ({
                   Close
                 </Button>
                 <Button color="primary" onPress={editIssue}>
-                  Add New Issue
+                  Action
                 </Button>
               </ModalFooter>
             </>

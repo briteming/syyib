@@ -37,6 +37,7 @@ import AddIssueModal from "@/components/addIssueModal";
 import DeleteIssueModal from "@/components/deleteIssueModal";
 import EditIssueModal from "@/components/editIssueModal";
 import CommentsModal from "@/components/commentsModal";
+import AddTokenModal from "@/components/addFineGrainedToken";
 const stateColorMap: Record<string, string> = {
   open: "success",
   closed: "danger",
@@ -124,10 +125,11 @@ export default function Management() {
     }
   }, []);
 
-  if (session) {
+  if (session || !session) {
     return (
       <div>
         <div className="flex items-center justify-between my-4">
+          <AddTokenModal />
           <h1 className={title()}>Management</h1>
           <AddIssueModal onResponse={handleModalSuccess} issueNumber={0} />
         </div>
