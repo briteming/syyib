@@ -15,6 +15,7 @@ import { Octokit } from "octokit";
 import { toast } from "react-hot-toast";
 import { IssueModalProps } from "@/interfaces/IssueModalProps";
 import { EditIcon } from "@/app/management/EditIcon";
+import { validateIssueFields } from "./validateUpsertIssue";
 
 const EditIssueModal: React.FC<IssueModalProps> = ({
   issueNumber,
@@ -23,6 +24,9 @@ const EditIssueModal: React.FC<IssueModalProps> = ({
   const [issueTitle, setIssueTitle] = useState("");
   const [issueBody, setIssueBody] = useState("");
   const editIssue = async () => {
+    if(!validateIssueFields(issueTitle, issueBody)){
+      return;
+    }
     try {
       const editIssueOctokit = new Octokit({ auth: `` });
       const response = editIssueOctokit.request(
