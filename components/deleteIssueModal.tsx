@@ -25,7 +25,7 @@ const DeleteIssueModal: React.FC<IssueModalProps> = ({
   };
   const deleteIssue = async () => {
     try {
-      const deleteIssueOctokit = new Octokit({ auth: `` });
+      const deleteIssueOctokit = new Octokit();
       const response = await deleteIssueOctokit.request(
         `PUT /repos/Shih-Yang-Young/issue-blog/issues/${issueNumber}/lock`,
         {
@@ -44,9 +44,15 @@ const DeleteIssueModal: React.FC<IssueModalProps> = ({
       });
       onResponse();
       onClose();
-    } catch (error) {
-      console.error("Error creating issue:", error);
-      toast.error("delete issue error", {
+    } catch (error: any) {
+      let msg = "";
+      if (error.response.status === 401) {
+        msg = "requires authentication. Need fine grained access token to add issue";
+      }
+      else if (error.response.status === 403) {
+        msg = "must have admin rights to Repository. Need fine grained access token to add issue";
+      }
+      toast.error("delete issue error " + msg, {
         style: { background: "red", color: "white" },
         position: "top-center",
       });
