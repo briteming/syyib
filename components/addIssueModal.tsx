@@ -23,7 +23,7 @@ const AddIssueModal: React.FC<IssueModalProps> = ({
   const [issueBody, setIssueBody] = useState("");
   const [fineGrainedAccessToken, setFineGrainedAccessToken] = useState("");
   const addIssue = async () => {
-    if(!validateIssueFields(issueTitle, issueBody)){
+    if (!validateIssueFields(issueTitle, issueBody)) {
       return;
     }
     try {
@@ -47,7 +47,7 @@ const AddIssueModal: React.FC<IssueModalProps> = ({
       onResponse();
       onClose();
     } catch (error: any) {
-      let msg = ""; 
+      let msg = "";
       if (error.response.status === 404) {
         msg = "need fine grained access token to add issue";
       }

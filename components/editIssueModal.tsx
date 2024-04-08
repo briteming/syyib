@@ -24,7 +24,7 @@ const EditIssueModal: React.FC<IssueModalProps> = ({
   const [issueTitle, setIssueTitle] = useState("");
   const [issueBody, setIssueBody] = useState("");
   const editIssue = async () => {
-    if(!validateIssueFields(issueTitle, issueBody)){
+    if (!validateIssueFields(issueTitle, issueBody)) {
       return;
     }
     try {
