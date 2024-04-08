@@ -12,12 +12,16 @@ import {
 } from "@nextui-org/react";
 import { Octokit } from "octokit";
 import { toast } from "react-hot-toast";
+import { validateIssueFields } from "./validateUpsertIssue";
 
 const AddIssueModal = () => {
   const [issueTitle, setIssueTitle] = useState("");
   const [issueBody, setIssueBody] = useState("");
   const [fineGrainedAccessToken, setFineGrainedAccessToken] = useState("");
   const addIssue = async () => {
+    if(!validateIssueFields(issueTitle, issueBody)){
+      return;
+    }
     try {
       const addIssueOctokit = new Octokit({ auth: fineGrainedAccessToken });
       const response = await addIssueOctokit.request(
