@@ -125,7 +125,7 @@ export default function Management() {
     }
   }, []);
 
-  if (session || !session) {
+  if (session) {
     return (
       <div>
         <div className="flex items-center justify-between my-4">
