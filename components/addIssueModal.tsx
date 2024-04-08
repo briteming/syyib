@@ -46,9 +46,12 @@ const AddIssueModal: React.FC<IssueModalProps> = ({
       });
       onResponse();
       onClose();
-    } catch (error) {
-      console.error("Error creating issue:", error);
-      toast.error("add issue error", {
+    } catch (error: any) {
+      let msg = ""; 
+      if (error.response.status === 404) {
+        msg = "need fine grained access token to add issue";
+      }
+      toast.error("add issue error " + msg, {
         style: { background: "red", color: "white" },
         position: "top-center",
       });
