@@ -19,9 +19,11 @@ npm install
 step1: 在.env 輸入你的 Github Client ID 和 Github Client secrets
 
 - 因為在使用 web 實施獲取 Github Oauth 時，Github 簽章規定一定要有 Client 端的 Client ID 和 Client secrets
-  可參考https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps#web-application-flow
+  可參考
+  https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps#web-application-flow
 
-- Github 獲取 Client ID 和 Client secrets 位置 https://github.com/settings/developers，請點選OAuth Apps -> New OAuth App 進行 Create
+- Github 獲取 Client ID 和 Client secrets 位置 https://github.com/settings/developers
+  ，請點選 OAuth Apps -> New OAuth App 進行 Create
 
 ```bash
 ***.env***
@@ -37,7 +39,8 @@ npm npm run dev
 
 若要操作 Upsert or Lock Issue，需輸入 Fine-grained personal access tokens
 
-- Github 獲取 Fine-grained personal access tokens 位置在 https://github.com/settings/tokens?type=beta，請點選Generate new token 進行 Create
+- Github 獲取 Fine-grained personal access tokens 位置在 https://github.com/settings/tokens?type=beta
+  ，請點選 Generate new token 進行 Create
 
 ## 使用技術
 
