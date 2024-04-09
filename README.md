@@ -40,7 +40,7 @@ npm npm run dev
 若要操作 Upsert or Lock Issue，需輸入 Fine-grained personal access tokens
 
 - Github 獲取 Fine-grained personal access tokens 位置在 https://github.com/settings/tokens?type=beta
-  ，請點選 Generate new token 進行 Create
+  ，請點選 Generate new token -> 點選 Repository access 的 Only select repositories 選擇你要開啟權限的專案 -> Permissions 有個 Issues 把它設 Read and write -> Generate token -> 複製 token 貼到 Management 的 Add Fine Grained Token 即可在網頁操作
 
 ## 使用技術
 
