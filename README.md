@@ -35,6 +35,10 @@ Run the development server
 npm npm run dev
 ```
 
+若要操作 Upsert or Lock Issue，需輸入 Fine-grained personal access tokens
+
+- Github 獲取 Fine-grained personal access tokens 位置在 https://github.com/settings/tokens?type=beta，請點選Generate new token 進行 Create
+
 ## 使用技術
 
 - [Next.js 14](https://nextjs.org/docs/getting-started)
