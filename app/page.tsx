@@ -1,6 +1,6 @@
 "use client";
 import { title } from "@/components/primitives";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Table,
   TableHeader,
@@ -10,6 +10,10 @@ import {
   TableCell,
   Spinner,
   Chip,
+  Input,
+  Card,
+  CardBody,
+  Button,
 } from "@nextui-org/react";
 import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
 import { useAsyncList } from "@react-stately/data";
@@ -19,12 +23,22 @@ import { browseColumns } from "@/composables/table";
 import CommentsModal from "@/components/commentsModal";
 
 const octokit = new Octokit({});
-const username = "Shih-Yang-Young";
-const repoName = "issue-blog";
 const perPage = 10;
 export default function Browse() {
   const [isLoading, setIsLoading] = React.useState(true);
   const [hasMore, setHasMore] = React.useState(false); // init true, cause need to load first data
+  const [username, setUsername] = React.useState("Shih-Yang-Young");
+  const [repoName, setRepoName] = React.useState("issue-blog");
+  const [searchUsername, setSearchUsername] = React.useState("Shih-Yang-Young");
+  const [searchRepoName, setSearchRepoName] = React.useState("issue-blog");
+  useEffect(() => {
+    list.reload();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchRepoName, searchUsername]);
+  const searchUserRepo = () => {
+    setSearchUsername(username);
+    setSearchRepoName(repoName);
+  }
   const list = useAsyncList<GithubIssue>({
     async load({ signal, cursor }) {
       if (!cursor) {
@@ -35,11 +49,11 @@ export default function Browse() {
       setIsLoading(true);
       const randomParam = Math.random().toString(36).substring(7);
       const response = await octokit.rest.issues.listForRepo({
-        owner: username,
-        repo: repoName,
+        owner: searchUsername,
+        repo: searchRepoName,
         per_page: perPage,
         page: Number(cursor),
-        url: `https://api.github.com/repos/Shih-Yang-Young/issue-blog/issues?random=${randomParam}`,
+        url: `https://api.github.com/repos/${searchUsername}/${searchRepoName}/issues?random=${randomParam}`,
       });
       const githubIssues: GithubIssue[] = response.data.map((issue: any) => ({
         number: issue.number,
@@ -62,7 +76,7 @@ export default function Browse() {
       return { items: unlockedIssues, cursor: cursor.toString() };
     },
   });
-
+  
   const [loaderRef, scrollerRef] = useInfiniteScroll({
     hasMore,
     onLoadMore: list.loadMore,
@@ -89,11 +103,31 @@ export default function Browse() {
   return (
     <div>
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-        <span
-          className={`${title({ size: "sm", color: "violet" })} lg:text-2xl`}
-        >
-          {username}&nbsp;
-        </span>
+        <Card>
+          <CardBody>
+            <div className="w-full flex flex-col gap-4">
+              <div key="lg" className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
+                <Input 
+                  size="lg"  
+                  type="text" 
+                  label="Username" 
+                  labelPlacement="outside-left" 
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+                <Input 
+                  size="lg"  
+                  type="text" 
+                  label="Repo" 
+                  labelPlacement="outside-left" 
+                  value={repoName}
+                  onChange={(e) => setRepoName(e.target.value)}
+                />
+                <Button onPress={()=> {searchUserRepo()}}>search</Button>
+              </div>
+            </div> 
+          </CardBody>
+        </Card>
       </section>
       <Table
         isHeaderSticky
