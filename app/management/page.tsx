@@ -37,14 +37,12 @@ interface Repo {
   repoName: string;
 }
 
-interface GetUserRepoListReturnType extends Promise<Repo[]> {}
-
 const perPage = 10;
 export default function Management() {
   /** define state*/
   const [username, setUsername] = React.useState("");
   const [repoName, setRepoName] = React.useState("");
-  const [repolist, setRepolist] = React.useState<Repo[]>([]);
+  const [repoList, setRepoList] = React.useState<Repo[]>([]);
   const { data: session } = useSession();
   const accessToken = (session as any)?.access_token;
   const octokit = new Octokit({auth: accessToken});
@@ -63,13 +61,14 @@ export default function Management() {
   }, []);
 
   /** step1: check session available then call getGitHubLoginName to username */
-  useEffect(() => {
-    async function fetchUsername() {
-      const loginName = await getGitHubLoginName();
-      if (loginName) {
-        setUsername(loginName);
-      }
+  async function fetchUsername() {
+    const loginName = await getGitHubLoginName();
+    if (loginName) {
+      setUsername(loginName);
     }
+  }
+
+  useEffect(() => {
     if (session) {
       console.log('Session is available');
       fetchUsername();
@@ -95,22 +94,27 @@ export default function Management() {
   }
 
   /** step2: use username to fetch repos */
+  async function fetchRepos() {
+    const _repoList = await getUserRepoList();
+    setRepoName(_repoList[0].repoName); // Set the first repo name as repoName
+    setRepoList(_repoList);
+  }
   useEffect(() => {
-    async function fetchRepos() {
-      const _repolist = await getUserRepolist();
-      setRepoName(_repolist[0].repoName); // Set the first repo name as repoName
-      setRepolist(_repolist);
-    }
+    console.log("I am username effect, I am change", username);
     if (username) {
       fetchRepos();
     }
   }, [username]);
   
   useEffect(() => {
-    console.log("Updated repolist:", repolist);
-  }, [repolist]);
+    console.log("Updated repoList:", repoList);
+  }, [repoList]);
 
-  const getUserRepolist = async () => {
+  useEffect(() => {
+    console.log("Updated repoName:", repoName);
+  }, [repoName]);
+
+  const getUserRepoList = async () => {
     if (!username) {
       return []
     }
@@ -132,21 +136,20 @@ export default function Management() {
     }
   }
 
+  /** step3: use first repo of repoList to fetch list */
   useEffect(() => {
-    async function loadData() {
-      // Load data using username and repoName
-      list.reload();
+    async function loadIssueList() {
+      issueList.reload();
     }
   
     if (username && repoName) {
-      console.log('Loading data...');
-      loadData();
+      loadIssueList();
     }
   }, [username, repoName]);
   
   const [isLoading, setIsLoading] = React.useState(true);
   const [hasMore, setHasMore] = React.useState(false);
-  const list = useAsyncList<GithubIssue>({
+  const issueList = useAsyncList<GithubIssue>({
     async load({ signal, cursor }) {
       if (!username) {
           return {items: []}
@@ -186,12 +189,13 @@ export default function Management() {
       return { items: unlockedIssues, cursor: cursor.toString() };
     },
   });
-  const handleModalSuccess = () => {
-    list.reload();
+  const handleModalSuccess =  () => {
+    // issueList.reload(); not work qq
+    window.location.reload();
   };
   const [loaderRef, scrollerRef] = useInfiniteScroll({
     hasMore,
-    onLoadMore: list.loadMore,
+    onLoadMore: issueList.loadMore,
   });
   const renderCell = React.useCallback((issue: any, columnKey: any) => {
     const cellValue = issue[columnKey];
@@ -239,11 +243,13 @@ export default function Management() {
                     readOnly={true}
                   />
                   <Autocomplete
-                    items={repolist}
-                    defaultInputValue={"issue-blog"}
+                    items={repoList}
+                    inputValue={repoName}
                     labelPlacement="outside-left"
                     label="Repo"
                     className="max-w-xs"
+                    allowsEmptyCollection={false}
+                    clearIcon={false}
                     onSelectionChange={(selectRepo) => {
                       setRepoName(selectRepo.toString());
                     }}
@@ -288,7 +294,7 @@ export default function Management() {
           </TableHeader>
           <TableBody
             isLoading={isLoading}
-            items={list.items}
+            items={issueList.items}
             loadingContent={<Spinner color="white" />}
           >
             {(issue) => (

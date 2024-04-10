@@ -44,7 +44,7 @@ const EditIssueModal: React.FC<IssueModalProps> = ({
           },
         },
       );
-      toast.success("add issue success!", {
+      toast.success("edit issue success!", {
         style: { background: "green", color: "white" },
         position: "top-center",
       });
