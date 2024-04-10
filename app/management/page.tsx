@@ -37,11 +37,14 @@ interface Repo {
   repoName: string;
 }
 
+interface GetUserRepoListReturnType extends Promise<Repo[]> {}
+
 const perPage = 10;
 export default function Management() {
   /** define state*/
   const [username, setUsername] = React.useState("");
   const [repoName, setRepoName] = React.useState("");
+  const [repolist, setRepolist] = React.useState<Repo[]>([]);
   const { data: session } = useSession();
   const accessToken = (session as any)?.access_token;
   const octokit = new Octokit({auth: accessToken});
@@ -73,41 +76,6 @@ export default function Management() {
     }
   }, [session]);
 
-  useEffect(() => {
-    async function fetchRepos() {
-      const response = await octokit.request(`GET /users/${username}/repos`, {
-        username: username,
-        type: 'public',
-      });
-      if (response.status === 200) {
-        const repos: Repo[] = response.data.map((repo: any) => ({ repoName: repo.name }));
-        if (repos.length > 0) {
-          setRepoName(repos[0].repoName); // Set the first repo name as repoName
-        }
-      } else {
-        console.error('Failed to fetch GitHub repos:', response);
-      }
-    }
-  
-    if (username) {
-      console.log('Username is available');
-      fetchRepos();
-      repos.reload();
-    }
-  }, [username]);
-  
-  useEffect(() => {
-    async function loadData() {
-      // Load data using username and repoName
-      list.reload();
-    }
-  
-    if (username && repoName) {
-      console.log('Loading data...');
-      loadData();
-    }
-  }, [username, repoName]);
-
   async function getGitHubLoginName() {
     if(!accessToken){
       return ;
@@ -125,7 +93,46 @@ export default function Management() {
       return null;
     }
   }
+
+  /** step2: use username to fetch repos */
+  useEffect(() => {
+    async function fetchRepos() {
+      const _repolist = await getUserRepolist();
+      setRepoName(_repolist[0].repoName); // Set the first repo name as repoName
+      setRepolist(_repolist);
+    }
+    if (username) {
+      fetchRepos();
+      repos.reload();
+    }
+  }, [username]);
   
+  useEffect(() => {
+    console.log("Updated repolist:", repolist);
+  }, [repolist]);
+
+  const getUserRepolist = async () => {
+    if (!username) {
+      return []
+    }
+    try {
+      const response = await octokit.request(`GET /users/${username}/repos`, {
+        username: username,
+        type: 'public',
+      });
+      if (response.status === 200) {
+        const repos: Repo[] = response.data.map((repo: any) => ({ repoName: repo.name }));
+        return repos
+      } else {
+        console.error('Failed to fetch GitHub repos:', response);
+        return []
+      }
+    } catch (error) {
+      console.error('Error fetching GitHub repos:', error);
+      return []
+    }
+  }
+
   let repos = useAsyncList<Repo>({
     async load({ signal }) {
       try {
@@ -149,6 +156,22 @@ export default function Management() {
       }
     }
   });
+
+  useEffect(() => {
+    async function loadData() {
+      // Load data using username and repoName
+      list.reload();
+    }
+  
+    if (username && repoName) {
+      console.log('Loading data...');
+      loadData();
+    }
+  }, [username, repoName]);
+
+  
+  
+  
 
   const [isLoading, setIsLoading] = React.useState(true);
   const [hasMore, setHasMore] = React.useState(false);
