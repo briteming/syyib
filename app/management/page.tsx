@@ -103,7 +103,6 @@ export default function Management() {
     }
     if (username) {
       fetchRepos();
-      repos.reload();
     }
   }, [username]);
   
@@ -133,30 +132,6 @@ export default function Management() {
     }
   }
 
-  let repos = useAsyncList<Repo>({
-    async load({ signal }) {
-      try {
-        if (!username) {
-          return {items: []}
-        }
-        const response = await octokit.request(`GET /users/${username}/repos`, {
-          username: username,
-          type: 'public',
-        });
-        if (response.status === 200) {
-          const repos: Repo[] = response.data.map((repo: any) => ({ repoName: repo.name }));
-          return {items: repos}
-        } else {
-          console.error('Failed to fetch GitHub repos:', response);
-          return {items: []}
-        }
-      } catch (error) {
-        console.error('Error fetching GitHub repos:', error);
-        return {items: []}
-      }
-    }
-  });
-
   useEffect(() => {
     async function loadData() {
       // Load data using username and repoName
@@ -168,11 +143,7 @@ export default function Management() {
       loadData();
     }
   }, [username, repoName]);
-
   
-  
-  
-
   const [isLoading, setIsLoading] = React.useState(true);
   const [hasMore, setHasMore] = React.useState(false);
   const list = useAsyncList<GithubIssue>({
@@ -268,7 +239,7 @@ export default function Management() {
                     readOnly={true}
                   />
                   <Autocomplete
-                    items={repos.items}
+                    items={repolist}
                     defaultInputValue={"issue-blog"}
                     labelPlacement="outside-left"
                     label="Repo"
