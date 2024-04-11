@@ -45,13 +45,15 @@ export default function Management() {
   const [repoList, setRepoList] = React.useState<Repo[]>([]);
   const { data: session } = useSession();
   const accessToken = (session as any)?.access_token;
-  const octokit = new Octokit({auth: accessToken});
+  const octokit = new Octokit({ auth: accessToken });
 
   /** fineGrainedAccessToken */
   useEffect(() => {
-    if (sessionStorage.getItem("fineGrainedAccessToken") == null &&
-     sessionStorage.getItem("toggle") == null) {
-      toast('add fine grained token to manipulate issue !!', {
+    if (
+      sessionStorage.getItem("fineGrainedAccessToken") == null &&
+      sessionStorage.getItem("toggle") == null
+    ) {
+      toast("add fine grained token to manipulate issue !!", {
         style: { background: "#F57512", color: "white" },
         position: "top-center",
         duration: 8000,
@@ -70,25 +72,25 @@ export default function Management() {
 
   useEffect(() => {
     if (session) {
-      console.log('Session is available');
+      console.log("Session is available");
       fetchUsername();
     }
   }, [session]);
 
   async function getGitHubLoginName() {
-    if(!accessToken){
-      return ;
+    if (!accessToken) {
+      return;
     }
     try {
       const response = await octokit.request("/user");
       if (response.status === 200) {
         return response.data.login;
       } else {
-        console.error('Failed to fetch GitHub profile:', response);
+        console.error("Failed to fetch GitHub profile:", response);
         return null;
       }
     } catch (error) {
-      console.error('Error fetching GitHub profile:', error);
+      console.error("Error fetching GitHub profile:", error);
       return null;
     }
   }
@@ -105,7 +107,7 @@ export default function Management() {
       fetchRepos();
     }
   }, [username]);
-  
+
   useEffect(() => {
     console.log("Updated repoList:", repoList);
   }, [repoList]);
@@ -116,43 +118,45 @@ export default function Management() {
 
   const getUserRepoList = async () => {
     if (!username) {
-      return []
+      return [];
     }
     try {
       const response = await octokit.request(`GET /users/${username}/repos`, {
         username: username,
-        type: 'public',
+        type: "public",
       });
       if (response.status === 200) {
-        const repos: Repo[] = response.data.map((repo: any) => ({ repoName: repo.name }));
-        return repos
+        const repos: Repo[] = response.data.map((repo: any) => ({
+          repoName: repo.name,
+        }));
+        return repos;
       } else {
-        console.error('Failed to fetch GitHub repos:', response);
-        return []
+        console.error("Failed to fetch GitHub repos:", response);
+        return [];
       }
     } catch (error) {
-      console.error('Error fetching GitHub repos:', error);
-      return []
+      console.error("Error fetching GitHub repos:", error);
+      return [];
     }
-  }
+  };
 
   /** step3: use first repo of repoList to fetch list */
   useEffect(() => {
     async function loadIssueList() {
       issueList.reload();
     }
-  
+
     if (username && repoName) {
       loadIssueList();
     }
   }, [username, repoName]);
-  
+
   const [isLoading, setIsLoading] = React.useState(true);
   const [hasMore, setHasMore] = React.useState(false);
   const issueList = useAsyncList<GithubIssue>({
     async load({ signal, cursor }) {
       if (!username) {
-          return {items: []}
+        return { items: [] };
       }
       if (!cursor) {
         cursor = "1";
@@ -189,7 +193,7 @@ export default function Management() {
       return { items: unlockedIssues, cursor: cursor.toString() };
     },
   });
-  const handleModalSuccess =  () => {
+  const handleModalSuccess = () => {
     // issueList.reload(); not work qq
     window.location.reload();
   };
@@ -232,12 +236,15 @@ export default function Management() {
           <Card>
             <CardBody>
               <div className="w-full flex flex-col gap-4">
-                <div key="lg" className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
-                  <Input 
-                    size="lg"  
-                    type="text" 
-                    label="Username" 
-                    labelPlacement="outside-left" 
+                <div
+                  key="lg"
+                  className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4"
+                >
+                  <Input
+                    size="lg"
+                    type="text"
+                    label="Username"
+                    labelPlacement="outside-left"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     readOnly={true}
@@ -254,10 +261,14 @@ export default function Management() {
                       setRepoName(selectRepo.toString());
                     }}
                   >
-                    {(repo) => <AutocompleteItem key={repo.repoName}>{repo.repoName}</AutocompleteItem>}
+                    {(repo) => (
+                      <AutocompleteItem key={repo.repoName}>
+                        {repo.repoName}
+                      </AutocompleteItem>
+                    )}
                   </Autocomplete>
                 </div>
-              </div> 
+              </div>
             </CardBody>
           </Card>
         </section>

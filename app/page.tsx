@@ -33,12 +33,12 @@ export default function Browse() {
   const [searchRepoName, setSearchRepoName] = React.useState("issue-blog");
   useEffect(() => {
     list.reload();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchRepoName, searchUsername]);
   const searchUserRepo = () => {
     setSearchUsername(username);
     setSearchRepoName(repoName);
-  }
+  };
   const list = useAsyncList<GithubIssue>({
     async load({ signal, cursor }) {
       if (!cursor) {
@@ -76,7 +76,7 @@ export default function Browse() {
       return { items: unlockedIssues, cursor: cursor.toString() };
     },
   });
-  
+
   const [loaderRef, scrollerRef] = useInfiniteScroll({
     hasMore,
     onLoadMore: list.loadMore,
@@ -106,26 +106,35 @@ export default function Browse() {
         <Card>
           <CardBody>
             <div className="w-full flex flex-col gap-4">
-              <div key="lg" className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
-                <Input 
-                  size="lg"  
-                  type="text" 
-                  label="Username" 
-                  labelPlacement="outside-left" 
+              <div
+                key="lg"
+                className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4"
+              >
+                <Input
+                  size="lg"
+                  type="text"
+                  label="Username"
+                  labelPlacement="outside-left"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                 />
-                <Input 
-                  size="lg"  
-                  type="text" 
-                  label="Repo" 
-                  labelPlacement="outside-left" 
+                <Input
+                  size="lg"
+                  type="text"
+                  label="Repo"
+                  labelPlacement="outside-left"
                   value={repoName}
                   onChange={(e) => setRepoName(e.target.value)}
                 />
-                <Button onPress={()=> {searchUserRepo()}}>search</Button>
+                <Button
+                  onPress={() => {
+                    searchUserRepo();
+                  }}
+                >
+                  search
+                </Button>
               </div>
-            </div> 
+            </div>
           </CardBody>
         </Card>
       </section>
