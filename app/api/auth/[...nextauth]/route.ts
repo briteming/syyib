@@ -7,8 +7,8 @@ import GithubProvider from "next-auth/providers/github";
 const handler = NextAuth({
   providers: [
     GithubProvider({
-      clientId: process.env.GITHUB_ID as string,
-      clientSecret: process.env.GITHUB_SECRET as string,
+      clientId: process.env.github_id as string,
+      clientSecret: process.env.github_secret as string,
     }),
   ],
   // https://stackoverflow.com/questions/69068495/how-to-get-the-provider-access-token-in-next-auth
